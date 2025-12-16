@@ -41,15 +41,6 @@ COMMIT;
 			>3</span
 		>
 
-		<span>Release the row lock once the update completes</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>4</span
-		>
-
 		<span>Commit transaction</span>
 	</li>
 </ol>
