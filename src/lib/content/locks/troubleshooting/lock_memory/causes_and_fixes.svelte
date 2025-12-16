@@ -184,8 +184,7 @@ ALTER ROLE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
 		>max_connections</a
 	>
 
-	size relative to your server's power is far beyond the defaults, you could encounter this error if
-	your running at high capacity.
+	size relative to your server's power is far beyond the defaults, you could encounter the error when operating at high capacity.
 </p>
 
 <p class="p">
@@ -203,8 +202,7 @@ ALTER ROLE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
 </CodeBlock>
 
 <p class="p">
-	After increasing the setting, monitor the database for signs of lock contention that can hold up
-	queries.
+	After increasing the setting, you should monitor your logs for signs of lock contention and adjust as necessary.
 </p>
 
 <h4 class="mt-8 mb-4 text-xl font-bold text-stone-900">
@@ -214,7 +212,7 @@ ALTER ROLE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
 <p class="p">
 	Joins, foreign keys, and triggers cause queries against one table to extend to others, potentially
 	amplifying the locks claimed per interaction. If these tables are heavily indexed, that too could
-	amplify the locks claimed. The first approach in this case is to remove redundant indexes. You can
+	amplify the effect. The first approach in this case is to remove redundant indexes. You can
 	check for them with this query:
 </p>
 
@@ -236,11 +234,11 @@ ORDER BY
 </CodeBlock>
 
 <p class="p">
-	Then you can apply migrations to remove the redundant ones. If other factors are at play, such as
+	If other factors are at play, such as
 	triggers, foreign keys, and joining, you can look into adjusting your querying patterns or
 	refactoring your tables. If you can improve performance, maybe by adding more targetted indexes,
 	adjusting memory settings, etc. you can prevent problematic queries from overlapping with each
-	other to the point that it leads to lock memory errors. If refactoring is not an option, you can
+	other. In a bind, if refactoring is not an option, you can
 	increase the <CodeHighlight>max_locks_per_transaction</CodeHighlight> value:
 </p>
 
@@ -250,8 +248,6 @@ ORDER BY
 </CodeBlock>
 
 <p class="p">
-	However, as your system is heavily interconnected, you may already be experiencing lock related
-	performance penalties around queueing. You should check your observability tools to make sure that
-	is not the case and if performance is not at risk or further degregation is tolerable, you can
-	modify your setting.
+	However, as your system is heavily interconnected, you may be experiencing lock related
+	performance penalties already. You should check your observability tools to make sure that's not the case.
 </p>
