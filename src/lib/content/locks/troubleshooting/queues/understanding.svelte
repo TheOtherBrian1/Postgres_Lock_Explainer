@@ -181,12 +181,11 @@ WHERE oid = 5;
 		>UPDATE</CodeHighlight
 	>, or <CodeHighlight>DELETE</CodeHighlight> command targets a table with a <CodeHighlight
 		>UNIQUE/PRIMARY_KEY INDEX</CodeHighlight
-	>.
+	>. 
 </p>
 
 <p class="p">
-	In case two pending operations try to add the same value to a unique column, the DB has to force
-	these transactions to happen sequentially. That way, if they try to add the same value, the first
-	one succeeds while the second will be rejected with a duplicate error. So, it's not the individual
+	In case two pending operations try to add/remove the same value in a unique column, the DB has to force
+	these transactions to happen sequentially. This is to ensure that they don't accidentally add duplicate values. So, it's not the individual
 	row or table that matters, but the order and speed of the transactions themself.
 </p>
