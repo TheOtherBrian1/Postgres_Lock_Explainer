@@ -36,7 +36,7 @@ process 1017208 still waiting for "lock_type" on relation 75874 of database 5 af
 -- if a query waiting to claim a lock on a row (tuple)
 process 45981 still waiting for "lock_type" on tuple (12313,6) of relation 37590 of database 5 after 1000.050 ms 
 
--- if a query is waiting to claiming a transaction lock
+-- if a query is waiting to claim a transaction lock
 process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.045 ms
 </CodeBlock>
 
