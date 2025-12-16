@@ -22,7 +22,7 @@
 			connection management, or bloat.
 		</p>
 		<p class="p">
-			It's their relative obscurity is what makes them so pernicious: when they shift from helpful
+			It's their relative obscurity that makes them so pernicious: when they shift from helpful
 			to harmful, few developers know how to detect and correct.
 		</p>
 		<p class="p">
