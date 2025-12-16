@@ -48,7 +48,7 @@
 
 <p class="p">
 	It's rare for queries to claim enough locks to cause this error. In my experience, it occurs in
-	five scenarios and the solution depends on the underlying cause:
+	four scenarios and the solution depends on the underlying cause:
 </p>
 
 <h4 class="mt-8 mb-4 text-xl font-bold text-stone-900">Cause 1: Partitioning</h4>
@@ -60,7 +60,7 @@
 </p>
 
 <p class="p">
-	partitioning tables is relatively rare, but if you perhaps inherited someone else's project and
+	If you perhaps inherited someone else's project and
 	are unsure if a table is partitioned, you can find out how many partitions a table has with the
 	below query:
 </p>
@@ -99,13 +99,7 @@ WHERE i.inhparent = 'SOME_SCHEMA_NAME.SOME_TABLE_NAME'::regclass
 	> command, but then forget to conclude it with a <CodeHighlight>COMMIT</CodeHighlight>. Most
 	Postgres client libraries handle this for you in the background, but some tools do not <CodeHighlight
 		>auto-commit</CodeHighlight
-	> be default.
-</p>
-
-<p class="p">
-	For instance, the popular Python driver Psycopg doesn't auto-commit by default, so if you forget
-	to add a commit statement to your code, the transaction may be used again, accummulating locks
-	over time.
+	> be default. For instance, the popular Python driver Psycopg needs to be explicitly configured to auto-commit.
 </p>
 
 <p class="p">
@@ -144,7 +138,7 @@ WHERE
 </CodeBlock>
 
 <p class="p">
-	As insurance against this mistake, set an
+	As insurance against this mistake, you can set an
 
 	<a
 		class="a"
