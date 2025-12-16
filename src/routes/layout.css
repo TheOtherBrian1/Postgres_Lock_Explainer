@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+@layer components {
+	.explainer_section {
+		margin-bottom: calc(var(--spacing) * 4);
+	}
+	.troubleshooting_section {
+		margin-bottom: calc(var(--spacing) * 12);
+	}
+	.p {
+		margin-bottom: calc(var(--spacing) * 4);
+	}
+	.a {
+		--tw-font-weight: var(--font-weight-medium) /* 500 */;
+		font-weight: var(--font-weight-medium) /* 500 */;
+		color: #ff3e00;
+		text-decoration-line: underline;
+		text-decoration-thickness: 2px;
+		text-underline-offset: 2px;
+		transition-property:
+			color, background-color, border-color, outline-color, text-decoration-color, fill, stroke,
+			--tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+		transition-timing-function: var(
+			--tw-ease,
+			var(--default-transition-timing-function) /* cubic-bezier(0.4, 0, 0.2, 1) */
+		);
+		transition-duration: var(--tw-duration, var(--default-transition-duration) /* 150ms */);
+	}
+	.a:hover {
+		color: #ff2222;
+	}
+}
