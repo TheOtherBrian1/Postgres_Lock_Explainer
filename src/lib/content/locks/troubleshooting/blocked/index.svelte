@@ -1,6 +1,6 @@
 <script lang="ts">
 	import SectionHeader from '$lib/components/section_header.svelte';
-	import TabGroup from '$lib/components/tab.svelte';
+	import TabGroup from '$lib/components/troubleshooting_tab.svelte';
 
 	import CausesAndFixes from '$lib/content/locks/troubleshooting/blocked/causes_and_fixes.svelte';
 	import Error from '$lib/content/locks/troubleshooting/blocked/error.svelte';

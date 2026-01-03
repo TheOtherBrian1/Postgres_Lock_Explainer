@@ -182,10 +182,7 @@ COMMIT;
 
 	<li class="pl-4">
 		<strong class="mb-1 block text-stone-900">
-			<a
-				class=" underline decoration-2 underline-offset-2 transition-colors hover:text-[#ff6b35]"
-				href="https://www.datadoghq.com/monitoring/postgresql-monitoring/">DataDog</a
-			>
+			<a class="a" href="https://www.datadoghq.com/monitoring/postgresql-monitoring/">DataDog</a>
 		</strong>
 		<p class="p">
 			Also a very good option with more flexible pricing. Here's an <a
@@ -197,9 +194,8 @@ COMMIT;
 
 	<li class="pl-4">
 		<strong class="mb-1 block text-stone-900">
-			<a
-				class=" underline decoration-2 underline-offset-2 transition-colors hover:text-[#ff6b35]"
-				href="http://learn.netdata.cloud/docs/collecting-metrics/databases/postgresql">NetData</a
+			<a class=" a" href="http://learn.netdata.cloud/docs/collecting-metrics/databases/postgresql"
+				>NetData</a
 			>
 		</strong>
 		<p>
@@ -215,10 +211,7 @@ COMMIT;
 
 	<li class="pl-4">
 		<strong class="mb-1 block text-stone-900">
-			<a
-				class=" underline decoration-2 underline-offset-2 transition-colors hover:text-[#ff6b35]"
-				href="https://github.com/darold/pgbadger">PGBadger</a
-			>
+			<a class="a" href="https://github.com/darold/pgbadger">PGBadger</a>
 		</strong>
 		<p>
 			It's an opensource log analyzer, which needs direct access to the log files of the machine
