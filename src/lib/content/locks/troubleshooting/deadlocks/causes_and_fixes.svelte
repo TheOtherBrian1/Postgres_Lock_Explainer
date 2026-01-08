@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CodeBlock from '$lib/components/code_block.svelte';
 	import CodeHighlight from '$lib/components/code_highlight.svelte';
+	import NumberedList from '$lib/components/lists/numbered_list.svelte';
 </script>
 
 <p class="p">
@@ -11,49 +12,25 @@
 	As stated in the "Understanding section", in most cases, you can ignore them as one-off events.
 	The fix, if necessary, is to:
 </p>
-<ol class="mb-8 ml-2 list-none space-y-3">
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>1</span
-		>
 
-		<span>Speed up queries, so they're less likely to overlap</span>
-	</li>
+{#snippet item1()}
+	Speed up queries, so they're less likely to overlap
+{/snippet}
+{#snippet item2()}
+	Minimize transactions that perform multiple statements, such as multiple <CodeHighlight
+		>UPDATE</CodeHighlight
+	> queries. Some built in compound operations, such as <CodeHighlight>UPSERTS</CodeHighlight><sup
+		><a class="a" href="https://www.dbvis.com/thetable/postgresql-upsert-insert-on-conflict-guide/"
+			>(INSERT ON CONFLICT)</a
+		></sup
+	>
+	and <CodeHighlight>MERGES</CodeHighlight> are also more vulnerable to these errors.
+{/snippet}
+{#snippet item3()}
+	Use a Postgres linter, like <a class="a" href="https://squawkhq.com/">squawkhq</a> when issuing migrations
+{/snippet}
+<NumberedList items={[item1, item2, item3]} />
 
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>2</span
-		>
-
-		<p>
-			Minimize transactions that perform multiple statements, such as multiple <CodeHighlight
-				>UPDATE</CodeHighlight
-			> queries. Some built in compound operations, such as <CodeHighlight>UPSERTS</CodeHighlight
-			><sup
-				><a
-					class="a"
-					href="https://www.dbvis.com/thetable/postgresql-upsert-insert-on-conflict-guide/"
-					>(INSERT ON CONFLICT)</a
-				></sup
-			>
-			and <CodeHighlight>MERGES</CodeHighlight> are also more vulnerable to these errors.
-		</p>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>3</span
-		>
-
-		<span
-			>Use a Postgres linter, like <a class="a" href="https://squawkhq.com/">squawkhq</a> when issuing
-			migrations</span
-		>
-	</li>
-</ol>
 <p class="p">
 	When you encounter the error, filter your logs for the keywords <CodeHighlight
 		>deadlock detected</CodeHighlight

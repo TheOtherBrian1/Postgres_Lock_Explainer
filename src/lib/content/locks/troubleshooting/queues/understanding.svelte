@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CodeBlock from '$lib/components/code_block.svelte';
 	import CodeHighlight from '$lib/components/code_highlight.svelte';
+	import NumberedList from '$lib/components/lists/numbered_list.svelte';
 </script>
 
 <h4 class="mt-8 mb-4 text-xl font-bold text-stone-900">Understanding the logs:</h4>
@@ -41,35 +42,16 @@
 	process 1017208 still waiting for "lock_type" on relation 75874 of database 5 after 1001.872 ms
 </CodeBlock>
 
-<ol class="mb-8 ml-2 list-none space-y-3">
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>1</span
-		>
-
-		<span>The process (connection or background worker) "1017208" is trying to execute a query</span
-		>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>2</span
-		>
-
-		<p>The query cannot claim a lock on a table/index with an ID of "75874" in the database 5</p>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>3</span
-		>
-
-		<span>The query has been waiting roughly 1s to claim its lock.</span>
-	</li>
-</ol>
+{#snippet item1()}
+	The process (connection or background worker) "1017208" is trying to execute a query
+{/snippet}
+{#snippet item2()}
+	The query cannot claim a lock on a table/index with an ID of "75874" in the database 5
+{/snippet}
+{#snippet item3()}
+	The query has been waiting roughly 1s to claim its lock.
+{/snippet}
+<NumberedList items={[item1, item2, item3]} />
 
 <p class="p">
 	To find the original names of the objects and DB refrenced in the logs (assuming they still
@@ -100,37 +82,16 @@ WHERE oid = 5;
 	process 45981 still waiting for "lock_type" on tuple (12313,6) of relation 37590 of database 5
 	after 1000.050 ms
 </CodeBlock>
-
-<ol class="mb-8 ml-2 list-none space-y-3">
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>1</span
-		>
-
-		<span>The process (connection or background worker) "45981" is trying to execute a query</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>2</span
-		>
-
-		<span>The query is trying to lock a specific row (tuple), but is blocked by another lock</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>3</span
-		>
-
-		<span
-			>The query cannot claim a lock on a table/index with an ID of "37590" in the database 5</span
-		>
-	</li>
-</ol>
+{#snippet item4()}
+	The process (connection or background worker) "45981" is trying to execute a query
+{/snippet}
+{#snippet item5()}
+	The query is trying to lock a specific row (tuple), but is blocked by another lock
+{/snippet}
+{#snippet item6()}
+	The query cannot claim a lock on a table/index with an ID of "37590" in the database 5
+{/snippet}
+<NumberedList items={[item4, item5, item6]} />
 
 <p class="p">
 	These types of logs usually occur when multiple slow <CodeHighlight>UPDATE</CodeHighlight> or <CodeHighlight
@@ -144,48 +105,29 @@ WHERE oid = 5;
 	process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.045 ms
 </CodeBlock>
 
-<ol class="mb-8 ml-2 list-none space-y-3">
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>1</span
-		>
-
-		<span>The process (connection or background worker) "46449" is trying to execute a query</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>2</span
-		>
-
-		<span
-			>The lock that the process is waiting for is not on a row nor object, but is instead on a
-			transaction</span
-		>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>3</span
-		>
-
-		<span>The locked transaction is called 87656107</span>
-	</li>
-</ol>
+{#snippet item7()}
+	The process (connection or background worker) "46449" is trying to execute a query
+{/snippet}
+{#snippet item8()}
+	The lock that the process is waiting for is not on a row nor object, but is instead on a
+	transaction
+{/snippet}
+{#snippet item9()}
+	The locked transaction is called 87656107
+{/snippet}
+<NumberedList items={[item7, item8, item9]} />
 
 <p class="p">
 	These types of logs usually occur when a slow <CodeHighlight>INSERT</CodeHighlight>, <CodeHighlight
 		>UPDATE</CodeHighlight
 	>, or <CodeHighlight>DELETE</CodeHighlight> command targets a table with a <CodeHighlight
 		>UNIQUE/PRIMARY_KEY INDEX</CodeHighlight
-	>. 
+	>.
 </p>
 
 <p class="p">
-	In case two pending operations try to add/remove the same value in a unique column, the DB has to force
-	these transactions to happen sequentially. This is to ensure that they don't accidentally add duplicate values. So, it's not the individual
-	row or table that matters, but the order and speed of the transactions themself.
+	In case two pending operations try to add/remove the same value in a unique column, the DB has to
+	force these transactions to happen sequentially. This is to ensure that they don't accidentally
+	add duplicate values. So, it's not the individual row or table that matters, but the order and
+	speed of the transactions themself.
 </p>

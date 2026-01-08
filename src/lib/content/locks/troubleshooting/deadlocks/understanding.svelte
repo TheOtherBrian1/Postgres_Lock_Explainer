@@ -2,6 +2,7 @@
 	import CodeBlock from '$lib/components/code_block.svelte';
 	import CodeHighlight from '$lib/components/code_highlight.svelte';
 	import Animation from '$lib/content/locks/animation/deadlocks.svelte';
+	import NumberedList from '$lib/components/lists/numbered_list.svelte';
 </script>
 
 <p>
@@ -16,34 +17,16 @@ COMMIT;
 </CodeBlock>
 
 <p class="p">It's going to try to:</p>
-<ol class="mb-8 ml-2 list-none space-y-3">
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>1</span
-		>
-
-		<span>Claim a lock on row 1 to update it</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>2</span
-		>
-
-		<span>Claim a lock on row 2 to update it</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>3</span
-		>
-
-		<span>Commit transaction</span>
-	</li>
-</ol>
+{#snippet item1()}
+	Claim a lock on row 1 to update it
+{/snippet}
+{#snippet item2()}
+	Claim a lock on row 2 to update it
+{/snippet}
+{#snippet item3()}
+	Commit transaction
+{/snippet}
+<NumberedList items={[item1, item2, item3]} />
 
 <p>
 	What if at the same time, another query runs that does the exact same thing, but instead updates
@@ -60,70 +43,29 @@ COMMIT;
 
 <p class="p">That potentially creates a conflict:</p>
 
-<ol class="mb-8 ml-2 list-none space-y-3">
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>1</span
-		>
+{#snippet item4()}
+	Query 1 locks row 1 to update it
+{/snippet}
+{#snippet item5()}
+	Query 2 locks row 2 to update it
+{/snippet}
+{#snippet item6()}
+	Query 1 tries to lock row 2
+{/snippet}
+{#snippet item7()}
+	Query 1 sees Query 2 already locked row 2, so it waits
+{/snippet}
+{#snippet item8()}
+	Query 2 tries to lock row 1
+{/snippet}
+{#snippet item9()}
+	Query 2 sees Query 1 already locked row 1, so it waits
+{/snippet}
+{#snippet item10()}
+	Both queries are now waiting on each other and cannot proceed
+{/snippet}
 
-		<span>Query 1 locks row 1 to update it</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>2</span
-		>
-
-		<span>Query 2 locks row 2 to update it</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>3</span
-		>
-
-		<span>Query 1 tries to lock row 2</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>4</span
-		>
-
-		<span>Query 1 sees Query 2 already locked row 2, so it waits</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>5</span
-		>
-
-		<span>Query 2 tries to lock row 1</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>6</span
-		>
-
-		<span>Query 2 sees Query 1 already locked row 1, so it waits</span>
-	</li>
-
-	<li class="flex items-start gap-3">
-		<span
-			class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
-			>6</span
-		>
-
-		<span>Both queries are now waiting on each other and cannot proceed</span>
-	</li>
-</ol>
+<NumberedList items={[item4, item5, item6, item7, item8, item9, item10]} />
 
 <Animation />
 
