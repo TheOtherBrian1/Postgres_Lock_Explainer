@@ -1,3 +1,14 @@
+<!-- 
+	Hello dear reader, 
+	You are probably wondering how this animation was made.
+	Well, it was generated with Gemini. 
+	
+	I'm generally sceptical of AI coding, 
+	but I figured it was harmless for dealing with a basic HTML/CSS prop where 
+	data integrity and user security isn't at risk. The code was reviewed and edited by me, 
+	@theotherbrian1, so, yeah, human insight was involved. 
+-->
+
 <div
 	class="mt-6 mb-10 rounded-2xl border border-stone-100 bg-white p-6 font-sans text-stone-600 shadow-sm md:p-8"
 >

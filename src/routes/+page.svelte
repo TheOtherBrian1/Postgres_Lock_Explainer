@@ -2,6 +2,34 @@
 	import Tool from '$lib/assets/Tool.gif';
 	import SectionHeader from '$lib/components/section_header.svelte';
 	import NumberedList from '$lib/components/lists/numbered_list.svelte';
+
+	const sections = [
+		{
+			link: '/locks/concept',
+			title: 'Concept',
+			blurb:
+				'Basic concepts of locks and how they work in Postgres. I tried to make more digestible with animations.'
+		},
+		{
+			link: '/locks/lock_tool',
+			title: 'Lock Blocking Graph',
+			blurb: 'Interactive tool that shows what SQL operations lock out each other.',
+			img: {
+				src: Tool,
+				alt: 'Lock Blocking Graph'
+			}
+		},
+		{
+			link: '/locks/troubleshooting',
+			title: 'Troubleshooting',
+			blurb: 'Lock problems and how to identify and resolve them.'
+		},
+		{
+			link: '/locks/monitoring',
+			title: 'Monitoring',
+			blurb: 'Reviews of popular monitoring tools, as well as some homegrown solutions.'
+		}
+	];
 </script>
 
 <article
@@ -9,22 +37,17 @@
 >
 	<section class="explainer_section mt-5">
 		<SectionHeader>About Me</SectionHeader>
-		<p class="p">
-			Hi! I'm Brian B. (also known as the <a class="a" href="https://github.com/TheOtherBrian1"
-				>@TheOtherBrian1</a
-			> on GitHub) and I created this site to explain how locks work in Postgres.
+		<p>
+			I, <a class="a" href="https://github.com/TheOtherBrian1">@TheOtherBrian1</a>, currently work
+			as a support engineer at <a class="a" href="https://supabase.com/">Supabase</a>, a quickly
+			growing Postgres provider. For most of my work day, I functionally act as a database
+			consultant.
 		</p>
-		<p class="p">
-			I currently work as a support engineer at <a class="a" href="https://supabase.com/"
-				>Supabase</a
-			>, which manages millions of Postgres databases at the time of writing. For most of my work
-			day, I functionally act as a database consultant.
-		</p>
-		<p class="p">
+		<p>
 			This site represents the documentation and resources I wish existed when I was learning about
 			locks.
 		</p>
-		<p class="p">My goal is to:</p>
+		<p>My goal is to:</p>
 
 		{#snippet item1()}
 			explain locks conceptually
@@ -39,95 +62,53 @@
 			troubleshoot common issues
 		{/snippet}
 		<NumberedList items={[item1, item2, item3, item4]} />
-		<p class="p">
-			The whole project took me about 3 months to complete, so I hope you find it insightful.
-		</p>
+		<p>The whole project took me about 3 months to complete, so I hope you find it insightful.</p>
 	</section>
 
 	<div class="space-y-4">
-		<p class="text-stone-600">It's split into 5 sections:</p>
+		<!-- <div class="flex h-12 items-center justify-start space-x-2 bg-gray-50">
+			<div class="h-full w-[2px] rounded-full bg-stone-900"></div>
+			<h4 class=" text-lg font-bold text-stone-900">Sections:</h4>
+		</div>
+		<h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">Sections:</h4> -->
+		<h4
+			class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
+		>
+			Sections:
+		</h4>
 
-		<div class="grid grid-cols-1 gap-4">
-			<a
-				href="/locks/concept"
-				class="group block rounded-xl border border-stone-200 bg-stone-50 p-5 transition-all hover:border-amber-200 hover:bg-amber-50/50 hover:shadow-sm"
-			>
-				<h4
-					class="flex items-center gap-2.5 text-lg font-bold text-stone-900 group-hover:text-amber-800"
+		<div class="p- grid grid-cols-1 gap-4">
+			{#each sections as { link, title, blurb, img }}
+				<a
+					href={link}
+					class=" group rounded-xl border border-stone-200 bg-stone-50 p-5 transition-all hover:border-amber-200 hover:bg-amber-50/50 hover:shadow-sm"
 				>
-					<span
-						class="h-2 w-2 shrink-0 rounded-full bg-stone-400 transition-colors group-hover:bg-amber-500"
-					></span>
-					Concept
-				</h4>
+					<h4
+						class="flex items-center gap-2.5 text-lg font-bold text-stone-900 group-hover:text-amber-800"
+					>
+						<span
+							class="h-2 w-2 shrink-0 rounded-full bg-stone-400 transition-colors group-hover:bg-amber-500"
+						></span>
+						{title}
+					</h4>
 
-				<p class="mt-2 text-sm text-stone-600 group-hover:text-stone-800">
-					Explains the basic concepts of locks and how they work in Postgres. I tried to make it
-					more digestible with animations.
-				</p>
-			</a>
-
-			<a
-				href="/locks/lock_tool"
-				class="group block rounded-xl border border-stone-200 bg-stone-50 p-5 transition-all hover:border-amber-200 hover:bg-amber-50/50 hover:shadow-sm"
-			>
-				<h4
-					class="flex items-center gap-2.5 text-lg font-bold text-stone-900 group-hover:text-amber-800"
-				>
-					<span
-						class="h-2 w-2 shrink-0 rounded-full bg-stone-400 transition-colors group-hover:bg-amber-500"
-					></span>
-					Lock Blocking Graph
-				</h4>
-
-				<p class="mt-2 mb-4 text-sm text-stone-600 group-hover:text-stone-800">
-					Interactive tool that shows what SQL operations lock out each other.
-				</p>
-
-				<div class="overflow-hidden rounded-lg border border-stone-200/60 bg-white shadow-sm">
-					<img
-						src={Tool}
-						alt="Lock Blocking Graph"
-						class="w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
-					/>
-				</div>
-			</a>
-
-			<a
-				href="/locks/troubleshooting"
-				class="group block rounded-xl border border-stone-200 bg-stone-50 p-5 transition-all hover:border-amber-200 hover:bg-amber-50/50 hover:shadow-sm"
-			>
-				<h4
-					class="flex items-center gap-2.5 text-lg font-bold text-stone-900 group-hover:text-amber-800"
-				>
-					<span
-						class="h-2 w-2 shrink-0 rounded-full bg-stone-400 transition-colors group-hover:bg-amber-500"
-					></span>
-					Troubleshooting
-				</h4>
-
-				<p class="mt-2 text-sm text-stone-600 group-hover:text-stone-800">
-					Explains how to identify and resolve common lock issues.
-				</p>
-			</a>
-
-			<a
-				href="/locks/monitoring"
-				class="group block rounded-xl border border-stone-200 bg-stone-50 p-5 transition-all hover:border-amber-200 hover:bg-amber-50/50 hover:shadow-sm"
-			>
-				<h4
-					class="flex items-center gap-2.5 text-lg font-bold text-stone-900 group-hover:text-amber-800"
-				>
-					<span
-						class="h-2 w-2 shrink-0 rounded-full bg-stone-400 transition-colors group-hover:bg-amber-500"
-					></span>
-					Monitoring
-				</h4>
-
-				<p class="mt-2 text-sm text-stone-600 group-hover:text-stone-800">
-					Reviews popular tools for monitoring locks, as well as some homegrown solutions.
-				</p>
-			</a>
+					<p
+						style="text-decoration-underline: none"
+						class=" p mt-2 border-none text-sm text-stone-600 no-underline group-hover:text-stone-800"
+					>
+						{blurb}
+					</p>
+					{#if img?.src}
+						<div class="overflow-hidden rounded-lg border border-stone-200/60 bg-white shadow-sm">
+							<img
+								src={img.src}
+								alt={img.alt}
+								class="w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
+							/>
+						</div>
+					{/if}
+				</a>
+			{/each}
 		</div>
 	</div>
 </article>

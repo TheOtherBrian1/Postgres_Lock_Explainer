@@ -16,6 +16,10 @@
 			name: 'Concept'
 		},
 		{
+			path: '/locks/types_of_locks',
+			name: 'Types of Locks'
+		},
+		{
 			path: '/locks/lock_tool',
 			name: 'Lock Blocking Graph'
 		},
@@ -42,7 +46,7 @@
 			{#each endpoints as { path, name }}
 				<a
 					href={path}
-					class={`block cursor-pointer border-b-2   pb-3 text-sm font-medium transition-all duration-300 hover:text-[#FF3E00] 
+					class={`block cursor-pointer border-b-2   pb-3 text-sm font-medium transition-all duration-300  hover:text-[#FF3E00]
                 ${page.url.pathname === path ? ' border-[#FF3E00] text-[#FF3E00]' : ' border-transparent text-stone-400'} `}
 				>
 					{name}

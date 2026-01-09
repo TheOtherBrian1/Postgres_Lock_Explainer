@@ -1,12 +1,23 @@
-<script>
-	let currentStage = $state(1);
+<!-- 
+	If you are here, 
+	you are probably wondering how this animation was made.
+	Well, it was generated with Gemini. 
+	
+	I'm generally sceptical of AI coding, 
+	but I figured it was harmless for dealing with a basic HTML/CSS prop where 
+	data integrity and user security isn't at risk. The code was reviewed and edited by me (the AI made some notable errors)
+	@theotherbrian1, so, yeah, human insight was involved. 
+-->
+
+<script lang="ts">
+	let currentStage = $state(0);
 
 	// Helper to manage opacity for the 'inactive' users
 	const FADED = 'opacity-40 grayscale-[0.5] scale-95';
 	const ACTIVE = 'opacity-100 scale-100 shadow-md border-stone-300';
 
-	const stages = {
-		1: {
+	const stages = [
+		{
 			title: 'Stage 1: Reader Accessing Row',
 			description: 'Old Reader (U1) is reading the original row',
 			progress: 20,
@@ -32,7 +43,7 @@
 			infoText: 'Old Reader (U1) is reading the row.',
 			iconColor: 'text-blue-500'
 		},
-		2: {
+		{
 			title: 'Stage 2: Writer Creates New Version',
 			description: 'Writer copies the row, old reader continues unaffected',
 			progress: 40,
@@ -58,7 +69,7 @@
 				'Writer (U2) creates a NEW row version instead of modifying in place. U1 continues reading the old version without interruption!',
 			iconColor: 'text-[#ff3e00]'
 		},
-		3: {
+		{
 			title: 'Stage 3: New Reader Sees Updated Version',
 			description: 'New reader sees the updated row, old reader still sees original',
 			progress: 60,
@@ -85,7 +96,7 @@
 				'New Reader (U3) sees the updated version while Old Reader (U1) still sees the original. Both queries run simultaneously without blocking each other!',
 			iconColor: 'text-green-500'
 		},
-		4: {
+		{
 			title: 'Stage 4: Old Reader Finishes',
 			description: 'Old reader releases the stale row, marking it for cleanup',
 			progress: 80,
@@ -115,7 +126,7 @@
 				"Old Reader (U1) completes its transaction. The old row is now a 'dead tuple' - invisible to everyone and ready for cleanup.",
 			iconColor: 'text-stone-500'
 		},
-		5: {
+		{
 			title: 'Stage 5: Vacuum Cleanup',
 			description: 'Background vacuum process removes the dead tuple',
 			progress: 100,
@@ -140,13 +151,13 @@
 				'The vacuum background process permanently removes dead tuples, reclaiming disk space. Without vacuum, old versions would accumulate and bloat the database.',
 			iconColor: 'text-red-500'
 		}
-	};
+	];
 
 	function nextStage() {
-		currentStage = currentStage >= 5 ? 1 : currentStage + 1;
+		currentStage = currentStage >= 4 ? 0 : currentStage + 1;
 	}
 	function prevStage() {
-		currentStage = currentStage - 1 < 1 ? 5 : currentStage - 1;
+		currentStage = currentStage - 1 < 0 ? 4 : currentStage - 1;
 	}
 </script>
 
@@ -164,15 +175,15 @@
 			<div class="flex space-x-2">
 				<button
 					onclick={prevStage}
-					class="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium transition-colors hover:border-[#ff3e00] hover:bg-white hover:text-[#ff3e00]"
+					class="cursor-pointer rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium transition-colors hover:border-[#ff3e00] hover:bg-white hover:text-[#ff3e00]"
 				>
-					← Prev
+					<span class="inline md:hidden lg:inline">←</span> Prev
 				</button>
 				<button
 					onclick={nextStage}
-					class="rounded-lg bg-stone-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#ff3e00]"
+					class="cursor-pointer rounded-lg bg-stone-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#ff3e00]"
 				>
-					Next →
+					Next <span class="inline md:hidden lg:inline">→</span>
 				</button>
 			</div>
 		</div>
@@ -191,7 +202,7 @@
 		>
 			<div class="mb-3 flex items-center gap-2">
 				<div
-					class="flex h-8 w-8 items-center justify-center rounded bg-blue-500 text-sm font-bold text-white shadow-sm"
+					class="flex h-8 w-8 items-center justify-center rounded bg-blue-500 text-sm font-bold text-white shadow-sm md:hidden lg:flex"
 				>
 					U1
 				</div>
@@ -213,7 +224,7 @@
 		>
 			<div class="mb-3 flex items-center gap-2">
 				<div
-					class="flex h-8 w-8 items-center justify-center rounded bg-[#ff3e00] text-sm font-bold text-white shadow-sm"
+					class="flex h-8 w-8 items-center justify-center rounded bg-[#ff3e00] text-sm font-bold text-white shadow-sm md:hidden lg:flex"
 				>
 					U2
 				</div>
@@ -235,7 +246,7 @@
 		>
 			<div class="mb-3 flex items-center gap-2">
 				<div
-					class="flex h-8 w-8 items-center justify-center rounded bg-green-600 text-sm font-bold text-white shadow-sm"
+					class="flex h-8 w-8 items-center justify-center rounded bg-green-600 text-sm font-bold text-white shadow-sm md:hidden lg:flex"
 				>
 					U3
 				</div>
