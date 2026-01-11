@@ -3,10 +3,10 @@
 </script>
 
 <div class="mx-auto mb-12 max-w-5xl px-6 pt-14 text-center">
-	<h1 class="mb-8 font-serif text-xl font-bold tracking-tight text-stone-950 md:text-6xl">
+	<h1 class="mb-8 font-serif text-3xl font-bold tracking-tight text-stone-950 md:text-6xl">
 		{title}
 	</h1>
-	<p class="mx-auto max-w-2xl text-xl leading-relaxed font-light text-stone-500">
+	<p class="mx-auto hidden max-w-2xl text-xl leading-relaxed font-light text-stone-500 md:block">
 		{subtitle}
 	</p>
 </div>

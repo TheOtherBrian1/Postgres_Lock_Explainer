@@ -6,16 +6,27 @@
 	import DropDown from '$lib/components/drop_down.svelte';
 	import CodeBlock from '$lib/components/code_block.svelte';
 	import operations from '$lib/constants/sql_operations';
-	import lockConflicts from '$lib/constants/locks';
-	import { get } from 'svelte/store';
+	import { tableLocks, rowLocks } from '$lib/constants/locks';
+
+	import Quote from '$lib/components/quote.svelte';
 
 	// Yes, I know nested sorts are not optomized. No, I don't care in this context. Judge somebody elses code
 	// - signed, @theOtherBrian1, the human who wrote it!
 
-	const getOps = (lockInput: string) => {
+	const getTableOps = (lockInput: string) => {
 		let activeOps: string[] = [];
 		for (let ops of operations) {
 			for (let lock of ops.mainTableLocksClaimed) {
+				if (lock === lockInput) activeOps.push(ops.operation);
+			}
+		}
+
+		return activeOps;
+	};
+	const getRowOps = (lockInput: string) => {
+		let activeOps: string[] = [];
+		for (let ops of operations) {
+			for (let lock of ops.mainRowLocksClaimed) {
 				if (lock === lockInput) activeOps.push(ops.operation);
 			}
 		}
@@ -266,8 +277,26 @@ COMMIT;
 			causing issues over the query that claimed it. To monitor and debug effectively, it's still
 			useful to know what types of locks are out there and what they're intended to do.
 		</p>
+		<h4
+			class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
+		>
+			Table Level Locks
+		</h4>
+		<p>
+			These are locks taken on entire tables/indexes and persist from the statement that requested
+			them until the transaction completed.
+		</p>
+		<Quote
+			source={{
+				label: 'PG Lock Docs',
+				link: 'Remember that all of these lock modes are table-level locks, even if the name contains the word “row”; the names of the lock modes are historical. '
+			}}
+		>
+			Remember that all of these lock modes are table-level locks, even if the name contains the
+			word “row”; the names of the lock modes are historical
+		</Quote>
 		<div class="p- grid grid-cols-1 gap-4">
-			{#each lockConflicts as { lock, conflicts, description }}
+			{#each tableLocks as { lock, conflicts, description }}
 				<div id={lock} class="  rounded-xl border border-stone-200 bg-stone-50 p-5 transition-all">
 					<h4 class="flex items-center gap-2.5 text-lg font-bold text-stone-900">
 						{lock}
@@ -281,7 +310,45 @@ COMMIT;
 					<div class="group relative mb-2 flex space-x-1 text-[10px]">
 						<span class="font-medium text-nowrap"> CLAIMS LOCK: </span>
 						<span class="max-w-[600px] overflow-hidden text-nowrap text-ellipsis">
-							{getOps(lock).join(', ')}
+							{getTableOps(lock).join(', ')}
+						</span>
+					</div>
+					<div class="flex flex-wrap items-center justify-start space-x-1 text-[10px]">
+						<span class="font-medium"> BLOCKS: </span>
+						{#each conflicts as conflict, i}
+							<a href={`#${conflict}`}>{conflict}</a>
+							{#if i !== conflicts.length - 1},
+							{/if}
+						{/each}
+					</div>
+				</div>
+			{/each}
+		</div>
+		<h4
+			class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
+		>
+			Row Level Locks
+		</h4>
+		<p>
+			These are locks taken on individual rows and persist from the time statement that requested
+			them until the transaction completed.
+		</p>
+		<div class="p- grid grid-cols-1 gap-4">
+			{#each rowLocks as { lock, conflicts, description }}
+				<div id={lock} class="  rounded-xl border border-stone-200 bg-stone-50 p-5 transition-all">
+					<h4 class="flex items-center gap-2.5 text-lg font-bold text-stone-900">
+						{lock}
+					</h4>
+					<p
+						style="text-decoration-underline: none"
+						class=" p mt-2 border-none text-sm text-stone-600 no-underline"
+					>
+						{description}
+					</p>
+					<div class="group relative mb-2 flex space-x-1 text-[10px]">
+						<span class="font-medium text-nowrap"> CLAIMS LOCK: </span>
+						<span class="max-w-[600px] overflow-hidden text-nowrap text-ellipsis">
+							{getRowOps(lock).join(', ')}
 						</span>
 					</div>
 					<div class="flex flex-wrap items-center justify-start space-x-1 text-[10px]">

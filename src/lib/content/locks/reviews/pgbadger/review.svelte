@@ -25,14 +25,14 @@
 	The script can be configured to run as a cron job, but by default it will only run once a day.
 </p>
 <p class="p">
-	The output are HTML, CSS, and JS files that you need to access by hosting your own webserver, such
-	as Apache. Alternatively, if your machine has a browser, you should be able to open the files
+	The outputs are HTML, CSS, and JS files that you need to access by hosting your own webserver,
+	such as Apache. Alternatively, if your machine has a browser, you should be able to open the files
 	directly in it.
 </p>
 <p class="p">
-	It's a good tool for filtering logs overall, but it's is not intended for realtime analytics. It's
-	not a suitable replacement for a monitoring dashboard nor does it provide a competitive level of
-	lock insight compared to the other options.
+	It's a good tool for filtering logs overall, but it's is not intended for realtime analytics.
+	Maybe you'll run it once an hour at most. It's not a suitable replacement for a monitoring
+	dashboard nor does it provide a competitive level of lock insight compared to the other options.
 </p>
 <p class="p">Some notable features include:</p>
 

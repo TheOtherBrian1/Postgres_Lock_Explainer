@@ -13,10 +13,10 @@
 </script>
 
 <quote
-	class={` mb-2 inline-block w-full border-l-2 border-gray-500 py-[1px] pl-4 ${notItalic ? '' : 'italic'}`}
+	class={` mb-2 inline-block w-full border-l-2  border-gray-500 py-[1px] pl-4 ${notItalic ? '' : 'italic'}`}
 >
 	{@render children()}
 	{#if source}
-		- <a href={source.link}>{source.label}</a>
+		<div>- <a href={source.link}>{source.label}</a></div>
 	{/if}
 </quote>

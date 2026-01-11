@@ -32,7 +32,3 @@
 p {
 	margin-bottom: calc(var(--spacing) * 4);
 }
-
-a {
-	text-decoration: underline;
-}

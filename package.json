@@ -29,7 +29,7 @@
 		"tailwindcss": "^4.1.17",
 		"typescript": "^5.9.3",
 		"vite": "^7.2.2",
-		"wrangler": "^4.55.0"
+		"wrangler": "^4.58.0"
 	},
 	"dependencies": {
 		"highlight.js": "^11.11.1"

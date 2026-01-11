@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "postgres-cookbook",
+	"name": "postgres-lock-explainer",
 	"main": ".svelte-kit/cloudflare/_worker.js",
 	"compatibility_date": "2025-12-16",
 	"compatibility_flags": ["nodejs_als"],

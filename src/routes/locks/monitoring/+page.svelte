@@ -168,7 +168,7 @@ SELECT pg_blocking_pids(pid_of_blocked_process);
 			>
 			and found that calling it ten times per second reduces performance by about <code>10%</code>.
 			My observations of other monitoring platforms found that lock metric scraping every 10 to 15
-			seconds is common and should not have meaningful affects on performance.
+			seconds is common and should not have meaningful impacts on performance.
 		</p>
 
 		<SectionHeader>Monitoring via the logs</SectionHeader>
