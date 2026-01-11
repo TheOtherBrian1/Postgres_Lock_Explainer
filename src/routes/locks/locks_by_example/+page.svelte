@@ -47,10 +47,10 @@
 		</p>
 		<DropDown title="Popular PG providers">
 			{#snippet item1()}
-				<a class="a" href="https://neon.new/">Instagres</a>
+				<a class="a" href="https://supabase.com/">Supabase</a>
 			{/snippet}
 			{#snippet item2()}
-				<a class="a" href="https://supabase.com/">Supabase</a>
+				<a class="a" href="https://neon.new/">Instagres</a>
 			{/snippet}
 			{#snippet item3()}
 				<a class="a" href="https://www.thenile.dev/">Nile</a>

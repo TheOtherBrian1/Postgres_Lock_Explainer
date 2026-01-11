@@ -8,12 +8,12 @@
 			link: '/locks/concept',
 			title: 'Concept',
 			blurb:
-				'Basic concepts of locks and how they work in Postgres. I tried to make more digestible with animations.'
+				'Basic concepts of locks and how they work in Postgres. I tried to make it more digestible with animations.'
 		},
 		{
 			link: '/locks/locks_by_example',
 			title: 'Locks By Example',
-			blurb: 'Outlines table locks and provides a few demoes one can run to see a few in action.'
+			blurb: 'Outlines table locks and provides a few demoes one can run to see them in action.'
 		},
 		{
 			link: '/locks/lock_tool',
