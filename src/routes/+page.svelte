@@ -44,9 +44,8 @@
 		<SectionHeader>About Me</SectionHeader>
 		<p>
 			I, <a class="a" href="https://github.com/TheOtherBrian1">@TheOtherBrian1</a>, currently work
-			as a support engineer at <a class="a" href="https://supabase.com/">Supabase</a>, a quickly
-			growing Postgres provider. For most of my work day, I functionally act as a database
-			consultant.
+			as a support engineer at <a class="a" href="https://supabase.com/">Supabase</a>, a respected
+			Postgres provider. For most of my work day, I functionally act as a database consultant.
 		</p>
 		<p>
 			This site represents the documentation and resources I wish existed when I was learning about
