@@ -16,8 +16,8 @@
 			name: 'Concept'
 		},
 		{
-			path: '/locks/types_of_locks',
-			name: 'Types of Locks'
+			path: '/locks/locks_by_example',
+			name: 'Locks by Example'
 		},
 		{
 			path: '/locks/lock_tool',
@@ -40,7 +40,7 @@
 
 <div class="from-bg-[#F9F8F6] w-full bg-gradient-to-b to-white px-0 pt-4 md:px-20">
 	<div class=" mx-auto max-w-[1164px] rounded-sm bg-[#f5f1eb] px-6 py-4 pb-16">
-		<Header title={'Postgres Locks Explained'} subtitle={'How Locking Works in Postgres'} />
+		<Header title={'Postgres Locks Explained'} subtitle={'From novice to expert'} />
 
 		<div class="mx-auto mb-12 flex max-w-5xl justify-center gap-12 border-b border-stone-200 px-6">
 			{#each endpoints as { path, name }}

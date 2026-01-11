@@ -12,7 +12,7 @@
 
 <p class="p">
 	<strong>TL;DR</strong> No realtime monitoring. Organizes logs for the users, including those related
-	to locks. Overall, too impractical to set up for the amount of insight it offers.
+	to locks.
 </p>
 
 <p class="p">
@@ -26,8 +26,8 @@
 </p>
 <p class="p">
 	The output are HTML, CSS, and JS files that you need to access by hosting your own webserver, such
-	as Apache. Although not necessarily difficult for an experienced user, it is a burden that I find
-	unpleasant.
+	as Apache. Alternatively, if your machine has a browser, you should be able to open the files
+	directly in it.
 </p>
 <p class="p">
 	It's a good tool for filtering logs overall, but it's is not intended for realtime analytics. It's

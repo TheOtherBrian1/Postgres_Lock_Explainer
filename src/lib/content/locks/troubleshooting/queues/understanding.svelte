@@ -72,15 +72,15 @@ WHERE oid = 5;
 	Generally, one will see these warnings during long migrations. To mitigate them, one can use the
 	advice of a migration linter, like <a class="a" href="https://squawkhq.com/">squawkhq</a>.
 	However, many operations claim table locks that can cause some conflict. You can check out the
-	lock simulator to know what blocks what and then try to speed up your queries or re-order them to
-	minimize lock conflicts.
+	<a href="/locks/lock_tool" class="a"> lock blocking graph</a> to know what blocks what and then try
+	to speed up your queries or re-order them to minimize lock conflicts.
 </p>
 
 <h5 class="mt-8 mb-4 text-lg font-bold text-stone-900">Waiting log type 2: row lock</h5>
-
+<!-- prettier-ignore -->
 <CodeBlock>
-	process 45981 still waiting for "lock_type" on tuple (12313,6) of relation 37590 of database 5
-	after 1000.050 ms
+process 45981 still waiting for "lock_type" on tuple (12313,6) of relation 37590 of database 5
+after 1000.050 ms
 </CodeBlock>
 {#snippet item4()}
 	The process (connection or background worker) "45981" is trying to execute a query
@@ -126,8 +126,8 @@ WHERE oid = 5;
 </p>
 
 <p class="p">
-	In case two pending operations try to add/remove the same value in a unique column, the DB has to
-	force these transactions to happen sequentially. This is to ensure that they don't accidentally
-	add duplicate values. So, it's not the individual row or table that matters, but the order and
-	speed of the transactions themself.
+	In case two pending operations try to add/update/remove the same value in a unique column, the DB
+	has to force these transactions to happen sequentially. This is to ensure that they don't
+	accidentally add duplicate values. So, it's not the individual row or table that matters, but the
+	order and speed of the transactions themself.
 </p>

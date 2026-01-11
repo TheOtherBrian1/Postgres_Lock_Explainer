@@ -13,9 +13,9 @@
 </p>
 
 <p class="p">
-	At this point in the review, I had gone through the process of configuring Datadog, Redgate,
-	PGAnalyze, and PgBadger. All setup processes were unpleasant. This tool for a self-hosted
-	environment was functionally a one-click deploy.
+	At this point in the review, I had gone through the process of configuring Datadog, Redgate, and
+	PGAnalyze. All setup processes were unpleasant. This tool for a self-hosted environment was
+	functionally a one-click deploy.
 </p>
 <p class="p">
 	However, the locking metrics its Postgres integration offers visibility into are more limited than

@@ -60,9 +60,8 @@
 </p>
 
 <p class="p">
-	If you perhaps inherited someone else's project and
-	are unsure if a table is partitioned, you can find out how many partitions a table has with the
-	below query:
+	If you perhaps inherited someone else's project and are unsure if a table is partitioned, you can
+	find out how many partitions a table has with the below query:
 </p>
 
 <!-- prettier-ignore -->
@@ -162,7 +161,7 @@ SET idle_transaction_session_timeout TO '10s';
 ALTER ROLE &lt;some_role&gt; SET idle_transaction_session_timeout TO '10s'; 
 
 -- for the entire database 
-ALTER ROLE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
+ALTER DATABASE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
 </CodeBlock>
 
 <p class="p">
@@ -184,12 +183,14 @@ ALTER ROLE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
 		>max_connections</a
 	>
 
-	size relative to your server's power is far beyond the defaults, you could encounter the error when operating at high capacity.
+	size relative to your server's power is far beyond the defaults, you could encounter the error
+	when operating at high capacity.
 </p>
 
 <p class="p">
 	Check your system's memory usage. If it is strained, you'll have to refactor your queries to
-	minimize memory exhaustion or increase your server size. Then you can increase the <a
+	minimize memory exhaustion or increase your server size. Then, if the problem persists, you can
+	increase the <a
 		class="a"
 		href="https://www.postgresql.org/docs/current/runtime-config-locks.html#GUC-MAX-LOCKS-PER-TRANSACTION"
 		>max_locks_per_transaction</a
@@ -202,7 +203,8 @@ ALTER ROLE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
 </CodeBlock>
 
 <p class="p">
-	After increasing the setting, you should monitor your logs for signs of lock contention and adjust as necessary.
+	After increasing the setting, you should monitor your logs for signs of lock contention and adjust
+	as necessary.
 </p>
 
 <h4 class="mt-8 mb-4 text-xl font-bold text-stone-900">
@@ -212,8 +214,8 @@ ALTER ROLE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
 <p class="p">
 	Joins, foreign keys, and triggers cause queries against one table to extend to others, potentially
 	amplifying the locks claimed per interaction. If these tables are heavily indexed, that too could
-	amplify the effect. The first approach in this case is to remove redundant indexes. You can
-	check for them with this query:
+	amplify the effect. The first approach in this case is to remove redundant indexes. You can check
+	for them with this query:
 </p>
 
 <!-- prettier-ignore -->
@@ -234,11 +236,10 @@ ORDER BY
 </CodeBlock>
 
 <p class="p">
-	If other factors are at play, such as
-	triggers, foreign keys, and joining, you can look into adjusting your querying patterns or
-	refactoring your tables. If you can improve performance, maybe by adding more targetted indexes,
-	adjusting memory settings, etc. you can prevent problematic queries from overlapping with each
-	other. In a bind, if refactoring is not an option, you can
+	If other factors are at play, such as triggers, foreign keys, and joining, you can look into
+	adjusting your querying patterns or refactoring your tables. If you can improve performance, maybe
+	by adding more targetted indexes, adjusting memory settings, etc. you can prevent problematic
+	queries from overlapping with each other. In a bind, if refactoring is not an option, you can
 	increase the <CodeHighlight>max_locks_per_transaction</CodeHighlight> value:
 </p>
 
@@ -249,5 +250,7 @@ ORDER BY
 
 <p class="p">
 	However, as your system is heavily interconnected, you may be experiencing lock related
-	performance penalties already. You should check your observability tools to make sure that's not the case.
+	performance penalties already. You should check out the <a href="/locks/monitoring" class="a"
+		>monitoring</a
+	> section to see if you can improve observability.
 </p>

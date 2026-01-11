@@ -4,6 +4,7 @@
 	import Blocked from '$lib/content/locks/troubleshooting/blocked/index.svelte';
 	import SectionHeader from '$lib/components/section_header.svelte';
 	import Queues from '$lib/content/locks/troubleshooting/queues/index.svelte';
+	import Timeout from '$lib/content/locks/troubleshooting/timeouts/index.svelte';
 </script>
 
 <article
@@ -22,8 +23,8 @@
 			connection management, or bloat.
 		</p>
 		<p class="p">
-			It's their relative obscurity that makes them so pernicious: when they shift from helpful
-			to harmful, few developers know how to detect and correct.
+			It's their relative obscurity that makes them so pernicious: when they shift from helpful to
+			harmful, few developers know how to detect and correct.
 		</p>
 		<p class="p">
 			My goal is to outline the varying problems I've come across and the configurations necessary
@@ -34,4 +35,5 @@
 	<LockMemory />
 	<Queues />
 	<Blocked />
+	<Timeout />
 </article>

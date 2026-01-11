@@ -67,8 +67,6 @@ COMMIT;
 
 <NumberedList items={[item4, item5, item6, item7, item8, item9, item10]} />
 
-<Animation />
-
 <p>
 	Postgres has a setting called: <a
 		class="a"
@@ -87,8 +85,8 @@ WHERE name = 'deadlock_timeout';
 
 <p class="p">
 	By default, it's set to <CodeHighlight>1s</CodeHighlight>. That's how often Postgres checks for
-	deadlocks. If it finds one, it picks the process holding the weaker lock and ends it. The affected
-	query then returns an error:
+	deadlocks. If it finds one, it picks a process holding weaker lock and ends it. The affected query
+	then returns an error:
 </p>
 
 <!-- prettier-ignore -->
@@ -100,9 +98,11 @@ HINT: 'See server log for query details.'
 CONTEXT: 'while updating tuple (0,1) in relation some_table'
 </CodeBlock>
 
+<Animation />
+
 <p class="p">
-	In most cases, you can ignore them as one-off events. Even the Postgres docs considers them rare
-	occurrences:
+	In most cases, you can ignore them as one-off events. Even the Postgres docs conveys that they are
+	likely to be rare:
 </p>
 
 <quote class=" mb-2 inline-block border-l-2 border-gray-500 py-[1px] pl-4 italic">

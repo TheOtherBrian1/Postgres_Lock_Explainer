@@ -6,7 +6,8 @@
 
 <p class="p">
 	There is no magic setting that can fix deadlocks because they're not caused by any distinct set
-	up. They're caused by the order overlapping queries interact with lockable resources.
+	up. They are a side-effect a overlapping queries taking locks on shared resources in conflicting
+	orders.
 </p>
 <p class="p">
 	As stated in the "Understanding section", in most cases, you can ignore them as one-off events.
@@ -14,12 +15,22 @@
 </p>
 
 {#snippet item1()}
-	Speed up queries, so they're less likely to overlap
+	Speed up queries with optomization techniques or hardware improvements, so they're less likely to
+	overlap
 {/snippet}
 {#snippet item2()}
-	Minimize transactions that perform multiple statements, such as multiple <CodeHighlight
-		>UPDATE</CodeHighlight
-	> queries. Some built in compound operations, such as <CodeHighlight>UPSERTS</CodeHighlight><sup
+	Be conservative with transactions that perform multiple statements, such as multiple <CodeHighlight
+		>UPDATES</CodeHighlight
+	> queries.
+	<!-- prettier-ignore-->
+	<CodeBlock>
+BEGIN;
+UPDATE some_table SET some_col = some_val WHERE id = 1;
+UPDATE some_table SET some_col = some_val WHERE id = 2;
+...
+COMMIT;
+	</CodeBlock>
+	Some built in compound operations, such as <CodeHighlight>UPSERTS</CodeHighlight><sup
 		><a class="a" href="https://www.dbvis.com/thetable/postgresql-upsert-insert-on-conflict-guide/"
 			>(INSERT ON CONFLICT)</a
 		></sup
@@ -67,8 +78,8 @@ COMMIT;
 
 <p class="p">
 	The error logs will only capture the last query (<CodeHighlight>SELECT 1</CodeHighlight>), even if
-	earlier query in the transaction contributed to the problematic lock. This can make debugging a
-	bit less intuitive, but in general, it will usually provide enough information to deduce what
+	earlier statements in the transaction contributed to the problematic lock. This can make debugging
+	a bit less intuitive, but in general, it will usually provide enough information to deduce what
 	occurred.
 </p>
 <p class="p">

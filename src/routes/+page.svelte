@@ -11,6 +11,11 @@
 				'Basic concepts of locks and how they work in Postgres. I tried to make more digestible with animations.'
 		},
 		{
+			link: '/locks/locks_by_example',
+			title: 'Locks By Example',
+			blurb: 'Outlines table locks and provides a few demoes one can run to see a few in action.'
+		},
+		{
 			link: '/locks/lock_tool',
 			title: 'Lock Blocking Graph',
 			blurb: 'Interactive tool that shows what SQL operations lock out each other.',
@@ -52,17 +57,17 @@
 		{#snippet item1()}
 			explain locks conceptually
 		{/snippet}
-		{#snippet item2()}
+		<!-- {#snippet item2()}
 			provide real world examples from my professional experience
-		{/snippet}
-		{#snippet item3()}
+		{/snippet} -->
+		{#snippet item2()}
 			review monitoring tools
 		{/snippet}
-		{#snippet item4()}
+		{#snippet item3()}
 			troubleshoot common issues
 		{/snippet}
-		<NumberedList items={[item1, item2, item3, item4]} />
-		<p>The whole project took me about 3 months to complete, so I hope you find it insightful.</p>
+		<NumberedList items={[item1, item2, item3]} />
+		<p>The whole project took a lot of effort to complete, so I hope you find it insightful.</p>
 	</section>
 
 	<div class="space-y-4">

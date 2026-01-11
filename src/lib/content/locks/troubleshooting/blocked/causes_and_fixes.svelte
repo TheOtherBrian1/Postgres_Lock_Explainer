@@ -126,11 +126,9 @@ BEGIN;
 
 <p>
 	The final timeout setting is <CodeHighlight>lock_timeout</CodeHighlight>. It determines how long a
-	query can wait for a lock to be freed. Especially in migrations, your queries may claim mltiple
-	hard-locks. If an earlier operation claimed one, and then further queries in the transaction get
-	stuck waiting for a new lock or are slow, that can cause the migration to delay. If it becomes too
-	bad, that leads to a lock queue that can take your instance offline. To avoid this, you should set
-	limits in place for how long a transaction can wait for locks.
+	query can wait for a lock to be freed. If many disruptive locks are stuck waiting on slow queries,
+	that leads to a lock queue that can hang your instance. To avoid this, you should set limits in
+	place for how long a transaction can wait for locks.
 </p>
 
 <!-- prettier-ignore -->
@@ -157,6 +155,10 @@ COMMIT;
 
 <h4 class="mt-8 mb-4 text-xl font-bold text-stone-900">Step 4: Monitoring</h4>
 
+<p>
+	Go to the <a class="a" href="/locks/monitoring">monitoring section</a> for advice on this topic.
+</p>
+<!-- 
 <p class="p">You can try tools like:</p>
 
 <ul class="mb-10 ml-4 list-disc space-y-2">
@@ -191,37 +193,6 @@ COMMIT;
 			>
 		</p>
 	</li>
-
-	<li class="pl-4">
-		<strong class="mb-1 block text-stone-900">
-			<a class=" a" href="http://learn.netdata.cloud/docs/collecting-metrics/databases/postgresql"
-				>NetData</a
-			>
-		</strong>
-		<p>
-			Gives you insight about locks, but not about the underlying queries locking. There's a cloud
-			version, but it is also open source and self-hostable. It's an extremely impressive piece of
-			software overall and worth reviewing. Here's a link to a <a
-				class="a"
-				href="https://app.netdata.cloud/spaces/netdata-demo/rooms/postgresql/overview?_gl=1*2u2aig*_gcl_au*Nzk0MjI5MTIwLjE3NjM3NDgyOTE.*_ga*MTc3MTQ0Nzc4LjE3NjM3NDgyOTE.*_ga_J69Z2JCTFB*czE3NjU2MDM1MzUkbzMkZzEkdDE3NjU2MDQ0NjckajUzJGwwJGgw#metrics_correlation=false&after=1765603590000&before=1765604490000&utc=Europe%2FAthens&offset=%2B2&timezoneName=E.%20Europe&modal=&modalTab=&_o=tVBBasMwEPyLzllYy7Zs5dZT6aWUtvdlJa9aQywJyy6E0r9XeUCSU24zzDAzzK_y37xur7wI_PBJHdUicaePc9lkAaS3NXkpRQo0VHZ3XXyXkva1UnJnesr5NHve5hTpeU17JuKcC31dcCGfYiDQ6qCmkTtB38PgBwtd0_VgEQXGlm1AE7wzDHBzYk3JaY7bS_ycq6MidWwG0xtsrW4Q8aAMj6Y1vQXPE9YWDmC1nkD7bnAojC7oOy2PPeLvHw&modalParams=&force_play=undefined"
-				>live demo</a
-			>.
-		</p>
-	</li>
-
-	<li class="pl-4">
-		<strong class="mb-1 block text-stone-900">
-			<a class="a" href="https://github.com/darold/pgbadger">PGBadger</a>
-		</strong>
-		<p>
-			It's an opensource log analyzer, which needs direct access to the log files of the machine
-			Postgres is hosted on or you need a way to export them. It's tried-and-true and can extract
-			invaluable lock information from your logs. Here's a <a
-				class="a"
-				href="https://pgbadger.darold.net/examples/sample.html#locks-type">link to a demo site</a
-			>
-		</p>
-	</li>
 </ul>
 <p class="p">
 	I'm sure there are other tools out there, but I'm not familiar them. Using the <a
@@ -229,4 +200,4 @@ COMMIT;
 		href="https://github.com/TheOtherBrian1/pg_cron">pg_cron</a
 	> or really any cron orchestrator, you can collect the relevant statistics yourself. I'll try to expand
 	this guide on it in the future (no promises)
-</p>
+</p> -->

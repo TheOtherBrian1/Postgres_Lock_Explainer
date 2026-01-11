@@ -3,7 +3,7 @@
 >
 	<h5 class="mb-2 text-center text-xl font-bold text-stone-900">Lock Queue Mechanics</h5>
 	<p class="mx-auto mb-12 max-w-md text-center text-sm text-stone-500">
-		When a transaction holds an exclusive lock, others must wait. As soon as the lock is released,
+		When a transaction holds a lock, conflicting queries must wait. As soon as the lock is released,
 		the next in line claims it.
 	</p>
 

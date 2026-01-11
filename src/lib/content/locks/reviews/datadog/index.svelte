@@ -7,9 +7,20 @@
 </script>
 
 <section class="troubleshooting_section">
-	<SectionHeader>Review 2: Datadog (9.9/10)</SectionHeader>
-
-	<ReviewTabGroup>
+	<div class="mb-8 overflow-hidden rounded-lg border border-stone-200 bg-white">
+		<h4
+			class="mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
+		>
+			Review 2: Datadog (9.9/10)
+		</h4>
+		<!-- Tab Headers -->
+		<div class="flex border-b border-stone-200 bg-stone-50">
+			<div class="min-h-[300px] bg-white p-6 md:p-8">
+				<Review />
+			</div>
+		</div>
+	</div>
+	<!-- <ReviewTabGroup>
 		{#snippet review()}
 			<Review />
 		{/snippet}
@@ -17,5 +28,5 @@
 		{#snippet setup()}
 			<Setup />
 		{/snippet}
-	</ReviewTabGroup>
+	</ReviewTabGroup> -->
 </section>

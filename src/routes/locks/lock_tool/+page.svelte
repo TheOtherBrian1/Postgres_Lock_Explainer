@@ -1,3 +1,15 @@
+<!-- 
+	Hello again, it looks like you really enjoy checking my code. That's fine and dandy.
+	All the data used by the lock monitor graph was manually obtained by me, @theotherbrian1.
+	I added my sources, which took quite a bit of time to obtain.CodeBlock
+
+	However, this component was coded predominantly by AI. I had orignally coded the list version by hand
+	and figured I would see what would happen if I fed it to Gemini. To my suprise, it didn't rely on external libraries, 
+	but instead opted to directly use SVG logic. No external dependencies whatsoever. After reviewing the code,
+	I found it to be a bit messy, but the logic for handling the radial graph was impressive, so I kept most of it,
+	only making minor edits to the view.
+-->
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import operations from '$lib/constants/sql_operations';

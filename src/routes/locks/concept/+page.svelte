@@ -151,10 +151,11 @@ SELECT name FROM actors WHERE row_id = 1;
 			much so, that Oracle, MongoDB, Postgres, etc. adopted it to accommodate parallelism.
 		</p>
 		<p>
-			Newer, more performant versions of MVCC, are being explored for Postgres. For instance, my
-			current employer is creating <a class="a" href="https://www.orioledb.com/">OrioleDB</a>, an
-			extension that modifies the storage engine. It's currently in alpha, but one day may make the
-			vacuum redundant.
+			Newer, more performant versions of MVCC, are being explored for Postgres. For instance, <a
+				class="a"
+				href="https://www.orioledb.com/">OrioleDB</a
+			>, an experimental extension, modifies the storage engine so that the vacuum is no longer
+			necessary.
 		</p>
 	</section>
 	<section class="explainer_section">
@@ -249,19 +250,12 @@ SELECT pg_relation_filepath('table_name');
 		<p>
 			On large tables, maintenance operations can be time consuming, so the harsh locks become
 			disruptive. There are a few clever strategies to get around this, that I discuss in parts of
-			the troubleshooting section.
+			the <a href="/locks/troubleshooting" class="a">troubleshooting section</a>.
 		</p>
-		<h4 class="mt-8 mb-4 text-xl font-bold text-stone-900">What's next</h4>
-		<p>
-			Memorizing every lock combination is unrealistic (or, at least I find it unrealistic). That's
-			why I designed the "Lock Blocking Graph": a tool that shows exactly which commands block each
-			other.
-		</p>
-		<p>
-			In my day job as a Support Engineer at Supabase, I've reviewed a few thousand Postgres
-			instances from hundreds of organizations. Postgres is a 40+ years old. There are few problems
-			that haven't been encountered. The troubleshooting section outlines known problems that emerge
-			due to concurrency and how to solve them.
-		</p>
+		<h4 class="mt-8 mb-4 text-right text-xl font-bold text-stone-900">
+			<a href="/locks/locks_by_example" class="a"
+				>Next Section <span class="relative top-[1px] inline">→</span></a
+			>
+		</h4>
 	</section>
 </article>

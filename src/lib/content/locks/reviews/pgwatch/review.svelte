@@ -13,7 +13,7 @@
 </p>
 
 <p class="p">
-	pgwatch is overwhelming in how much coverage it offers for Postgres (seriously, it has 10+
+	PGWatch is overwhelming in how much coverage it offers for Postgres (seriously, it has 10+
 	dashboards). Though, when it comes to lock monitoring, it lags behind a few other options.
 </p>
 <p class="p">

@@ -3,36 +3,26 @@
 	import CodeHighlight from '$lib/components/code_highlight.svelte';
 </script>
 
-<p class="p">
+<p>
 	These errors are most often caused by slow queries or poorly formatted migrations. <CodeHighlight
 		>Problem 4's</CodeHighlight
 	> Understanding portion discusses this in more detail. The goal of is this portion is just to explain
-	how you can increase visiblity over blocking queries.
+	how you can increase visiblity over blocking queries via logging. For other monitoring techniques, go
+	to the <a href="/locks/monitoring" class="a">monitoring section</a>.
 </p>
 
-<p class="p">
-	To try to catch the <em>blocking query</em> (not just the victim), configure <CodeHighlight
-		>log_min_duration_statement</CodeHighlight
-	> or use <CodeHighlight>auto_explain</CodeHighlight>:
-</p>
-<CodeBlock>
-	-- Log all queries running longer than 1s ALTER ROLE postgres SET log_min_duration_statement =
-	'1s'; -- Or use auto_explain to get plans ENABLE extension auto_explain; ALTER ROLE postgres SET
-	auto_explain.log_min_duration = '1s';
-</CodeBlock>
-
-<p class="p">
-	The <CodeHighlight>log_lock_waits</CodeHighlight> logs record the blocked query, but only the blocker's
+<p>
+	The <CodeHighlight>log_lock_waits</CodeHighlight> setting records the blocked query, but only the blocker's
 	process_id
 </p>
 
-<p class="p">
+<p>
 	It's not possible to consistently log the blocking query retroactively. There are some settings
-	you can change, though, that increase the odds of getting it
+	you can change, though, that increase the odds of getting it.
 </p>
 
-<p class="p">
-	Configure Postgres setting <a
+<p>
+	Configure the Postgres setting <a
 		class="a"
 		href="https://www.postgresql.org/docs/current/runtime-config-logging.html#GUC-LOG-MIN-DURATION-STATEMENT"
 		>log_min_duration_statement</a
@@ -42,28 +32,33 @@
 
 <CodeBlock>ALTER ROLE postgres SET log_min_duration_statement = '1s';</CodeBlock>
 
-<p class="p">
-	Alternatively, enable the postgres bundled auto_explain extension. It provides utilities identical
-	to log_min_duration_statement, but also logs the query plan, too:
+<p>
+	Alternatively, enable the postgres bundled <a
+		href="https://www.postgresql.org/docs/18/auto-explain.html#:~:text=In%20ordinary%20usage%2C%20these%20parameters%20are%20set%20in%20postgresql.conf%2C%20although%20superusers%20can%20alter%20them%20on%2Dthe%2Dfly%20within%20their%20own%20sessions.%20Typical%20usage%20might%20be%3A"
+		class="a">auto_explain module</a
+	>. It provides utilities identical to log_min_duration_statement, but also logs the query plan,
+	too:
 </p>
 
-<CodeBlock>
-	ENABLE extension auto_explain; ALTER ROLE postgres SET auto_explain.log_min_duration = '1s';
+<!-- prettier-ignore -->
+<CodeBlock label='alter setting'>
+-- add auto_explain to shared_preload_libraries if not already present and restart server
+ALTER SYSTEM SET shared_preload_libraries = 'auto_explain';
+
+-- Set the minimum duration to log
+ALTER DATABASE postgres SET auto_explain.log_min_duration = '1s';
 </CodeBlock>
 
-<p class="p">These settings produce logs that have the following header:</p>
+<p>These settings produce logs that have the following header:</p>
 
 <CodeBlock>duration: 0.487 ms statement: SELECT...</CodeBlock>
 
-<p class="p">
+<p>
 	Both record a query's transaction and process_id in their log fields, which can be used to
-	determine what operation was the blocker in <em>some cases</em>. If you had a queue of blocking
-	queries, the first two may run for .6s. The last query would've been blocked for 1.2s, enough to
-	trigger the log_lock_waits logger, but the blocking queries wouldn't have been picked up by
-	log_min_duration_statement nor auto_explain. So, it's not full proof, but nonetheless helpful.
+	determine what operation was the blocker in <em>most cases</em>.
 </p>
 
-<p class="p">
+<p>
 	Because migration related operations are more likely to induce these errors, it's worth logging
 	them by default.
 </p>
