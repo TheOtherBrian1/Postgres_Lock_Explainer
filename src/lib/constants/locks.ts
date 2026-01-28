@@ -9,13 +9,13 @@ const tableLocks = [
 		lock: 'ROW SHARE',
 		conflicts: ['EXCLUSIVE', 'ACCESS EXCLUSIVE'],
 		description:
-			'Blocks data changes while indexes, materialized views, or triggers are being created to prevent new data from disrupting the build process. It also stops changes to table access rules (like RLS updates) or operations that overwrite the table file, protecting against data loss that could occur if the system tried changing data while the file was inaccessible.'
+			'Blocks indexes, materialized views, and triggers from being built. It also stops changes to table access rules (like RLS updates) or operations that overwrite the table file.'
 	},
 	{
 		lock: 'ROW EXCLUSIVE',
 		conflicts: ['SHARE', 'SHARE ROW EXCLUSIVE', 'EXCLUSIVE', 'ACCESS EXCLUSIVE'],
 		description:
-			'Blocks data changes while indexes, materialized views, or triggers are being created to prevent new data from disrupting the build process. It also stops changes to table access rules (like RLS updates) or operations that overwrite the table file, protecting against data loss that could occur if the system tried changing data while the file was inaccessible.'
+			'Claimed by write operations and blocks indexes, materialized views, and triggers from being built, as the write operations could problematically overwrite the data being uised in index/view or inappropriately activate an incomplete trigger. It also stops changes to table access rules (like RLS updates) or operations that overwrite the table file, protecting against data loss that could occur if the system tried changing data while the file was inaccessible.'
 	},
 	{
 		lock: 'SHARE UPDATE EXCLUSIVE',
@@ -27,7 +27,7 @@ const tableLocks = [
 			'ACCESS EXCLUSIVE'
 		],
 		description:
-			'Prevents schema changes or vacuums from running at the same time on a table. Without it, changes could conflict, corrupt table statistics, and overlapping vacuums would waste resources.'
+			'Prevents schema modifications and vacuums from running at the same time on a table. Without it, schema changes could conflict with each other or corrupt table statistics, and overlapping vacuums could waste resources.'
 	},
 	{
 		lock: 'SHARE',

@@ -18,7 +18,7 @@
 			critical functionality grinds to a halt.
 		</p>
 		<p class="p">
-			As a Postgres support engineer, I look at thousands of production databases a year. In my
+			I look at thousands of production databases a year. In my
 			experience, lock bottlenecks are rare, certainly less so than under-optimized queries, poor
 			connection management, or bloat.
 		</p>
@@ -27,7 +27,7 @@
 			harmful, few developers know how to detect and correct.
 		</p>
 		<p class="p">
-			My goal is to outline the varying problems I've come across and the configurations necessary
+			This section outlines the varying problems I've come across and the configurations necessary
 			to monitor and address them.
 		</p>
 	</section>

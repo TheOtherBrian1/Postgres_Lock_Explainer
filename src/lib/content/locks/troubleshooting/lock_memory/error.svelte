@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CodeBlock from '$lib/components/code_block.svelte';
-	// import CodeHighlight from "$lib/components/code_highlight.svelte";
+	import CodeHighlight from "$lib/components/code_highlight.svelte";
+	import DropDown from '$lib/components/drop_down.svelte';
 </script>
 
 <p>
@@ -14,3 +15,20 @@ ERROR: out of shared memory
 SQL state: 53200
 Hint: You might need to increase max_locks_per_transaction.
 </CodeBlock>
+
+<DropDown title='Real world example'>
+	<p>
+		Someone asked for my help removing a heavily partitioned table from their database. Everytime they tried to <CodeHighlight>DROP</CodeHighlight> it, they encountered the <CodeHighlight>out of shared memory</CodeHighlight> message. 
+	</p>
+	<p>Each partition required an <CodeHighlight>ACCESS EXCLUSIVE</CodeHighlight> lock and collectively, they used up more locks than the database could support. 
+	</p>
+	<p>
+		The solution was trivial: temporariliy increase the lock limit:
+	</p>
+	<CodeBlock label="modify max_locks_per_transaction">
+		ALTER DATABASE &lt;db_name&gt; SET max_locks_per_transaction TO &lt;some_int_val&gt;
+	</CodeBlock>
+	<p>
+		What wasn't trivial for me the first time around was interpretting the error message, and I hope this guide addresses that limitation for other's so they don't have to struggle through it, too.
+	</p>
+</DropDown>

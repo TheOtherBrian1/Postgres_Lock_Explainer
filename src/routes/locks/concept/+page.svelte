@@ -108,7 +108,7 @@ SELECT name FROM actors WHERE row_id = 1;
 				<strong class="mb-1 block text-stone-900">DELETE</strong>
 				When a row is deleted, Postgres doesn't remove it immediately. Current readers can still see it,
 				but future queries treat it as if it were gone. Later, a background process called the vacuum
-				(Postgres's garbage collector) permanently discards stale rows.
+				(Postgres's garbage collector) actually removes the row when the original readers no longer reference it.
 			</div>
 		{/snippet}
 		{#snippet item6()}
@@ -202,7 +202,7 @@ SELECT name FROM actors WHERE row_id = 1;
 	</section>
 	<section>
 		<SectionHeader>Locks: Altering table behavior</SectionHeader>
-		<p>Just like a Word documents, MP4s, and PNGs, Postgres tables are stored as ordinary files.</p>
+		<p>Just like Word documents, MP4s, and PNGs, Postgres tables are stored as ordinary files.</p>
 		<!-- prettier-ignore  -->
 		<CodeBlock label="Find Table File">
 -- shows you where the table lives on disk 

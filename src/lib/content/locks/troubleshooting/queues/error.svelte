@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CodeBlock from '$lib/components/code_block.svelte';
 	import CodeHighlight from '$lib/components/code_highlight.svelte';
+	import DropDown from '$lib/components/drop_down.svelte';
 </script>
 
 <p class="p">
@@ -45,3 +46,31 @@ process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.0
 		>Understanding</CodeHighlight
 	> section explains these logs in more detail.
 </p>
+
+
+<DropDown title='Real world example'>
+	<p>
+		Someone noticed that their database was sufferring from severe IO strain, but couldn't diagnose the cause.
+	</p>
+	<p>
+		Reviewing their logs, I noticed lock queues for <CodeHighlight>REFRESH MATERIALIZED VIEW CONCURRENTLY</CodeHighlight> queries. 
+	</p>
+	<p>
+		Every 5 minutes, they had a cron job to refresh their view, but at one point, the query degraded. By the time the first refresh completed, there'd be a few more stuck pending. 
+	</p>
+	<p>
+		So, the view would refresh immediately after refreshing instead of waiting 5 minutes to execute again.
+	</p>
+	<p>
+		The constant, redundant, rebuilding strained disk.
+	</p>
+	<p>
+		The solution was to add a <CodeHighlight>lock_timeout</CodeHighlight> configuration to the <CodeHighlight>REFRESH</CodeHighlight> requests, so they wouldn't queue needlessly.
+	</p>
+	<p>
+		The database also needed some general tuning and query optomization to help improve operations overall.
+	</p>
+	<p>
+		Ideally, one should monitor for lock queues like these before the devolve into serious problems. You can go to the monitoring section to learn more about how to do this. 
+	</p>
+</DropDown>

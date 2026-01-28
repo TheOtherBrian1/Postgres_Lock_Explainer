@@ -2,6 +2,7 @@
 	import Tool from '$lib/assets/Tool.gif';
 	import SectionHeader from '$lib/components/section_header.svelte';
 	import NumberedList from '$lib/components/lists/numbered_list.svelte';
+	import UnorderedList from '$lib/components/lists/unordered_list.svelte';
 
 	const sections = [
 		{
@@ -44,8 +45,7 @@
 		<SectionHeader>About Me</SectionHeader>
 		<p>
 			I, <a class="a" href="https://github.com/TheOtherBrian1">@TheOtherBrian1</a>, currently work
-			as a support engineer at <a class="a" href="https://supabase.com/">Supabase</a>, a respected
-			Postgres provider. For most of my work day, I functionally act as a database consultant.
+			as a support engineer with a focus in Postgres management and observability. 
 		</p>
 		<p>
 			This site represents the documentation and resources I wish existed when I was learning about
@@ -54,18 +54,18 @@
 		<p>My goal is to:</p>
 
 		{#snippet item1()}
-			explain locks conceptually
+			Explain locks conceptually
 		{/snippet}
-		<!-- {#snippet item2()}
-			provide real world examples from my professional experience
-		{/snippet} -->
 		{#snippet item2()}
-			review monitoring tools
+			Review monitoring tools
 		{/snippet}
 		{#snippet item3()}
-			troubleshoot common issues
+			Troubleshoot common issues
 		{/snippet}
-		<NumberedList items={[item1, item2, item3]} />
+		{#snippet item4()}
+			Outline real world examples of how locks impact projects
+		{/snippet} 
+		<NumberedList items={[item1, item2, item3, item4]} />
 		<p>The whole project took a lot of effort to complete, so I hope you find it insightful.</p>
 	</section>
 
@@ -88,7 +88,7 @@
 					class=" group rounded-xl border border-stone-200 bg-stone-50 p-5 transition-all hover:border-amber-200 hover:bg-amber-50/50 hover:shadow-sm"
 				>
 					<h4
-						class="flex items-center gap-2.5 text-lg font-bold text-stone-900 group-hover:text-amber-800"
+						class="flex underline items-center gap-2.5 text-lg font-bold text-stone-900 group-hover:text-amber-800"
 					>
 						<span
 							class="h-2 w-2 shrink-0 rounded-full bg-stone-400 transition-colors group-hover:bg-amber-500"
@@ -115,4 +115,17 @@
 			{/each}
 		</div>
 	</div>
+	<p>
+		There are a few topics that I haven't gotten around to documenting yet, but I plan to add them soon:
+	</p>
+	{#snippet item1()}
+			<span>Monitoring row level locks</span>
+	{/snippet}
+	{#snippet item2()}
+			<span>Monitoring row level locks via the pgrowlocks extension</span>
+	{/snippet}
+	{#snippet item3()}
+			<span>skip locked</span>
+	{/snippet}
+	<UnorderedList items={[item1, item2, item3]} />
 </article>

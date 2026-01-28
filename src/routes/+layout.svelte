@@ -43,7 +43,7 @@
 		aria-label="show menu"
 		tabindex="1"
 		role="button"
-		class="cursor group fixed top-8 right-8 z-20 md:hidden"
+		class="cursor group absolute top-8 right-8 z-20 md:hidden"
 	>
 		<div class="h-6 w-6">
 			<div class="mb-1 h-0.5 w-full bg-black"></div>

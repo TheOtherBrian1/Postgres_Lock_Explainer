@@ -35,7 +35,7 @@
 		<p class="p">
 			Locks, as stated in other sections, generally do not cause issues, but they can sometimes make
 			relatively fast queries slow. For instance, if a query normally runs for 1ms, but is often
-			blocked by another that takes 1s, then, because of locks, it going to run at 1s. There are a
+			blocked by another that takes 1s, then the fast query degrade severely. There are a
 			few techniques for monitoring locking activity.
 		</p>
 
@@ -50,15 +50,14 @@
 		<CodeBlock>SELECT * FROM pg_locks;</CodeBlock>
 
 		<p>
-			However, the output isn't the most interpretable, and it's not linked to the underlying query
-			that is holding lock. Either or, at the end of the day, the amount of locks doesn't matter.
+			However, the output isn't the most interpretable. Either or, at the end of the day, the amount of locks doesn't matter.
 			What really matters is the amount of blocking. To get that information, one needs to use
 			another view called <a
 				href="https://www.postgresql.org/docs/current/monitoring-stats.html#MONITORING-PG-STAT-ACTIVITY-VIEW"
 				class="a">pg_stat_activity</a
 			>.
 		</p>
-		. It shows the state of all connections assocaited with the DB. It has a column called <CodeHighlight
+		It shows connections assocaited with the DB. It has a column called <CodeHighlight
 			>wait_event_type</CodeHighlight
 		>. When it's set to <CodeHighlight>Lock</CodeHighlight>, the connection is stuck in a lock
 		queue.
@@ -77,7 +76,7 @@ WHERE wait_event_type = 'Lock';
 		<p>
 			By joining <CodeHighlight>pg_locks</CodeHighlight> with <CodeHighlight
 				>pg_stat_activity</CodeHighlight
-			>, one can see what locks queries are waiting for.
+			>, one can see what table locks queries are waiting for.
 		</p>
 		<!-- prettier-ignore  -->
 		<CodeBlock>
@@ -173,9 +172,8 @@ SELECT pg_blocking_pids(pid_of_blocked_process);
 
 		<SectionHeader>Monitoring via the logs</SectionHeader>
 		<p>
-			This was discussed in the <a href="/locks/troubleshooting">Troubleshooting</a> section, but there
-			are certain log settings one can use to record lock queues. To avoid repeating myself, I'm just
-			going to quote the original entry.
+			This was discussed in the <a class='a' href="/locks/troubleshooting">troubleshooting section</a>, but there
+			are certain log settings one can use to record lock queues. 
 		</p>
 		<Quote notItalic={true}>
 			<p class="p">
@@ -256,10 +254,10 @@ process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.0
 			<SectionHeader>Professional Monitoring Tools</SectionHeader>
 			<p>There are a lot of popular tools for monitoring Postgres performance</p>
 			<p>
-				I went through the process of investigating the most recognizable to see how much visibility
+				I went through the process of investigating the most recognizable ones to see how much visibility
 				they gave over locking.
 			</p>
-			<p class="p mb-4">My judement guidelines were a bit opinionated, but in general:</p>
+			<p class="p mb-4">My guidelines were a bit opinionated, but in general:</p>
 			{#snippet item1()}
 				Full lock visibility (frequent lock tree sampling), scored highest
 			{/snippet}
@@ -275,19 +273,121 @@ process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.0
 			<UnorderedList color="red" items={[item1, item2, item3]} />
 
 			<p>The more comprehensive review is at the end, but the summary is:</p>
-			<p class="p">
+						<div class="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
+				<div class="overflow-x-auto">
+					<table class="w-full text-left text-sm text-stone-600">
+						<caption class="caption-top px-6 py-4 text-left text-lg font-medium text-stone-700">
+							Tools Reviewed
+						</caption>
+						<thead class="bg-stone-50 text-xs text-stone-500 uppercase">
+							<tr>
+								<th class="px-6 py-4 font-bold tracking-wider">Tool</th>
+								<th class="px-6 py-4 font-bold tracking-wider">Lock Visibility</th>
+								<th class="px-6 py-4 font-bold tracking-wider">Setup Experience</th>
+								<th class="px-6 py-4 font-bold tracking-wider">Score</th>
+							</tr>
+						</thead>
+
+						<tbody class="divide-y divide-stone-100">
+							<ReviewRow
+								tool="Datadog"
+								url="https://www.datadoghq.com/free-datadog-trial/"
+								visibility="Excellent"
+								visibilityNotes="Complete visibility over locks"
+								setup="Ran into a few issues, but the setup process was okay. Could be better. Have to work with .yaml files and have an intuition for navigating the Linux directory layout"
+								warnSetup={false}
+								score="9.9"
+							/>
+							<ReviewRow
+								tool="PGAnalyze"
+								url="https://pganalyze.com/"
+								visibility="Excellent"
+								visibilityNotes="Complete visibility over locks"
+								setup="Pretty straightforwards for self-hosted instances. May run into hiccups if you customize log file locations"
+								warnSetup={false}
+								score="9.8"
+							/>
+							<ReviewRow
+								tool="PGWatch"
+								url="https://www.cybertec-postgresql.com/en/products/pgwatch-postgresql-monitoring/"
+								demoUrl="https://demo.pgwatch.com/?var-agg_interval=1m&orgId=1&from=now-1h&to=now&timezone=utc&var-dbname=$__all&var-replicas=show&refresh=5m"
+								visibility="Good"
+								visibilityNotes="Shows types of locks active, but not the queries being impacted"
+								setup="N/A: I did not personally set up the tool, just used it"
+								warnSetup={false}
+								score="7"
+							/>
+							<ReviewRow
+								tool="Percona Monitor and Managment"
+								url="https://docs.percona.com/pmm"
+								demoUrl="https://pmmdemo.percona.com/graph/d/postgresql-instance-summary/postgresql-instance-summary?from=now-7d&to=now&timezone=America%2FNew_York&var-interval=$__auto&var-qthres=0.100&var-slowq=0&var-srvcnt=2&var-rangeCustom=10080&var-clustercnt=1&var-withoutcluster=1&var-environment=$__all&var-cluster=$__all&var-node_name=pmm-server&var-service_name=pmm-server-postgresql&orgId=1&var-database=$__all&var-version=14.19&var-service_type=$__all&var-uptime=45.60035768750001&var-currentConn=10&var-activeConn=3&var-node_id=pmm-server&var-uptimedecimal=45.6&var-max_connections=100&var-work_mem=4194304&var-shared_buffers=134217728&var-wal_buffers=4194304&var-wal_segment_size=16777216&var-maintenance_work_mem=67108864&var-block_size=8192&var-checkpoint_segments=&var-checkpoint_timeout=300&var-fsync=1&var-default_statistics_target=100&var-seq_page_cost=1&var-random_page_cost=4&var-effective_cache_size=4294967296&var-effective_io_concurrency=1&var-autovacuum=1&var-autovacuum_analyze_scale_factor=0.1&var-autovacuum_analyze_threshold=50&var-autovacuum_vacuum_scale_factor=0.2&var-autovacuum_vacuum_threshold=50&var-autovacuum_vacuum_cost_limit=1767595127000&var-autovacuum_vacuum_cost_delay=0.002&var-autovacuum_max_workers=3&var-autovacuum_naptime=60&var-autovacuum_freeze_max_age=200000000&var-logging_collector=0&var-log_min_duration_statement=1767595127000&var-log_duration=0&var-log_lock_waits=0&var-max_wal_senders=10&var-max_wal_size=1073741824&var-min_wal_size=83886080&var-wal_compression=0&var-max_worker_processes=8&var-max_parallel_workers_per_gather=2&var-max_parallel_workers=2&var-autovacuum_work_mem=1767595127000&var-autovacuum_multixact_freeze_max_age=400000000&var-service_id=7f81a4af-b887-4cba-9835-ffdb1c762c92"
+								visibility="Moderate"
+								visibilityNotes="Similar to PGWatch, but lacks visibility over wait durations"
+								setup="Recommends installing a the pg_stat_monitors extension. Not the most straightforward process, but still doable"
+								warnSetup={false}
+								score="6.8"
+							/>
+
+							<ReviewRow
+								tool="Netdata"
+								url="https://www.netdata.cloud/"
+								demoUrl="https://app.netdata.cloud/spaces/netdata-demo/rooms/all-nodes/overview?_gl=1*1dh0cmr*_gcl_au*MTg4Mjc1MDEwMS4xNzYwMDk2NzEw*_ga*MzE3NjE0MjU3LjE3NTIzMTcxNzM.*_ga_J69Z2JCTFB*czE3NjQ3MDc5MDkkbzEyJGcxJHQxNzY0NzA5NzcwJGozOCRsMCRoMA..#metrics_correlation=false&after=-900&before=0&utc=Europe%2FAthens&offset=%2B2&timezoneName=E.%20Europe&modal=&modalTab=&_o=q1ZKzkgsKvFLzE3VLUvMUbJSyk3NK413LCjIyUxOLMnMzyvWNYgvLk3CJhyQX1ySXpRarGuopKOUYpFokmqQbKprnmxuqWtiaGKqa2lgkKprYZxomWZglpacZJaoq0sd22oB"
+								visibility="Moderate"
+								visibilityNotes="Offers information over the quantity of locks active or waiting, but no further details"
+								setup="Perfection! Straightforward setup process with no issues whatsoever. Best from a enterprise provider."
+								warnSetup={false}
+								score="6.5"
+							/>
+
+							<ReviewRow
+								tool="PGBadger"
+								url="https://github.com/darold/pgbadger"
+								demoUrl="https://pgbadger.darold.net/examples/sample.html#locks-type"
+								visibility="Low"
+								visibilityNotes="Provides information via log interpretation, but it isn't suitable for live monitoring"
+								setup="N/A: I did not personally set up the tool, just used it"
+								warnSetup={false}
+								score="5"
+							/>
+
+							<ReviewRow
+								tool="PGHero"
+								url="https://github.com/ankane/pghero"
+								demoUrl="https://pghero.dokkuapp.com/"
+								visibility="None"
+								visibilityNotes="Provides no information over locks"
+								setup="Trivial to set up. Download, deploy, connect to your Postgres instance"
+								warnSetup={false}
+								score="3"
+							/>
+
+							<ReviewRow
+								tool="Redgate Monitor"
+								url="https://www.red-gate.com/products/redgate-monitor/"
+								demoUrl="https://monitor.red-gate.com/GlobalDashboard"
+								visibility="None"
+								visibilityNotes="Offers no visibility over locks"
+								setup="The worst out of all them. Offensively tediuos and unintuitive"
+								warnSetup={true}
+								score="3"
+							/>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<p class="mt-4">
 				For my review process, I created a few throwaway Postgres servers on <a
 					class="a"
-					href="https://hetzner.cloud/?ref=rTQwfR1oZc81">Hertzner</a
+					href="https://hetzner.cloud/?ref=rTQwfR1oZc81">Hetzner</a
 				> to deploy the software to. I wanted full control over the system just in case I needed to apply
 				any special configurations to get everything to work. I documented the setup process below if
 				you want to check it out, but it's important to note that if you're using a DB provider, like
-				AWS RDS, Supabase, etc. the tools I tested may not be compatible with the platform.
+				AWS RDS, Supabase, etc. the tools I tested may not be compatible with those platforms.
 			</p>
 			<DropDown title="Review Process">
-				<DropDown title="Hertzner Setup">
+				<DropDown title="Hetzner Setup">
 					<section class="explainer_section">
-						<SectionHeader>Deploying a server on Hertzner</SectionHeader>
+						<SectionHeader>Deploying a server on Hetzner</SectionHeader>
 						<Quote>
 							Note: to connect to the server, you will need to use SSH. Here's a <a
 								href="https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html"
@@ -297,7 +397,7 @@ process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.0
 						</Quote>
 						<h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">
 							1. Create a <a class="a font-bold" href="https://hetzner.cloud/?ref=rTQwfR1oZc81"
-								>Hertzner Account</a
+								>Hetzner Account</a
 							>
 						</h4>
 						<h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">
@@ -345,7 +445,7 @@ process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.0
 								href="https://medium.com/@bbrenng1/compiling-postgres-from-source-on-ubuntu-a2cbf0235878"
 								class="a">compiling PG from source</a
 							>, one could also just use Ubuntu's package manager to quickly deploy it. At the time
-							of writing, Hertzner Ubuntu targets PG16 by default. This was fine for tests,
+							of writing, Hetzner Ubuntu targets PG16 by default. This was fine for tests,
 							especially because some tools, such as Redgate and Datadog are not yet compatible with
 							PG18 (the latest release).
 						</p>
@@ -593,108 +693,7 @@ pgbench \
 				</Quote>
 			</DropDown>
 
-			<div class="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
-				<div class="overflow-x-auto">
-					<table class="w-full text-left text-sm text-stone-600">
-						<caption class="caption-top px-6 py-4 text-left text-lg font-medium text-stone-700">
-							Tools Reviewed
-						</caption>
-						<thead class="bg-stone-50 text-xs text-stone-500 uppercase">
-							<tr>
-								<th class="px-6 py-4 font-bold tracking-wider">Tool</th>
-								<th class="px-6 py-4 font-bold tracking-wider">Lock Visibility</th>
-								<th class="px-6 py-4 font-bold tracking-wider">Setup Experience</th>
-								<th class="px-6 py-4 font-bold tracking-wider">Score</th>
-							</tr>
-						</thead>
 
-						<tbody class="divide-y divide-stone-100">
-							<ReviewRow
-								tool="Datadog"
-								url="https://www.datadoghq.com/free-datadog-trial/"
-								visibility="Excellent"
-								visibilityNotes="Complete visibility over locks"
-								setup="Ran into a few issues, but the setup process was okay. Could be better. Have to work with .yaml files and have an intuition for navigating the Linux directory layout"
-								warnSetup={false}
-								score="9.9"
-							/>
-							<ReviewRow
-								tool="PGAnalyze"
-								url="https://pganalyze.com/"
-								visibility="Excellent"
-								visibilityNotes="Complete visibility over locks"
-								setup="Pretty straightforwards for self-hosted instances. May run into hiccups if you customize log file locations"
-								warnSetup={false}
-								score="9.8"
-							/>
-							<ReviewRow
-								tool="PGWatch"
-								url="https://www.cybertec-postgresql.com/en/products/pgwatch-postgresql-monitoring/"
-								demoUrl="https://demo.pgwatch.com/?var-agg_interval=1m&orgId=1&from=now-1h&to=now&timezone=utc&var-dbname=$__all&var-replicas=show&refresh=5m"
-								visibility="Good"
-								visibilityNotes="Shows types of locks active, but not the queries being impacted"
-								setup="N/A: I did not personally set up the tool, just used it"
-								warnSetup={false}
-								score="7"
-							/>
-							<ReviewRow
-								tool="Percona Monitor and Managment"
-								url="https://docs.percona.com/pmm"
-								demoUrl="https://pmmdemo.percona.com/graph/d/postgresql-instance-summary/postgresql-instance-summary?from=now-7d&to=now&timezone=America%2FNew_York&var-interval=$__auto&var-qthres=0.100&var-slowq=0&var-srvcnt=2&var-rangeCustom=10080&var-clustercnt=1&var-withoutcluster=1&var-environment=$__all&var-cluster=$__all&var-node_name=pmm-server&var-service_name=pmm-server-postgresql&orgId=1&var-database=$__all&var-version=14.19&var-service_type=$__all&var-uptime=45.60035768750001&var-currentConn=10&var-activeConn=3&var-node_id=pmm-server&var-uptimedecimal=45.6&var-max_connections=100&var-work_mem=4194304&var-shared_buffers=134217728&var-wal_buffers=4194304&var-wal_segment_size=16777216&var-maintenance_work_mem=67108864&var-block_size=8192&var-checkpoint_segments=&var-checkpoint_timeout=300&var-fsync=1&var-default_statistics_target=100&var-seq_page_cost=1&var-random_page_cost=4&var-effective_cache_size=4294967296&var-effective_io_concurrency=1&var-autovacuum=1&var-autovacuum_analyze_scale_factor=0.1&var-autovacuum_analyze_threshold=50&var-autovacuum_vacuum_scale_factor=0.2&var-autovacuum_vacuum_threshold=50&var-autovacuum_vacuum_cost_limit=1767595127000&var-autovacuum_vacuum_cost_delay=0.002&var-autovacuum_max_workers=3&var-autovacuum_naptime=60&var-autovacuum_freeze_max_age=200000000&var-logging_collector=0&var-log_min_duration_statement=1767595127000&var-log_duration=0&var-log_lock_waits=0&var-max_wal_senders=10&var-max_wal_size=1073741824&var-min_wal_size=83886080&var-wal_compression=0&var-max_worker_processes=8&var-max_parallel_workers_per_gather=2&var-max_parallel_workers=2&var-autovacuum_work_mem=1767595127000&var-autovacuum_multixact_freeze_max_age=400000000&var-service_id=7f81a4af-b887-4cba-9835-ffdb1c762c92"
-								visibility="Moderate"
-								visibilityNotes="Similar to PGWatch, but lacks visibility over wait durations"
-								setup="Recommends installing a the pg_stat_monitors extension. Not the most straightforward process, but still doable"
-								warnSetup={false}
-								score="6.8"
-							/>
-
-							<ReviewRow
-								tool="Netdata"
-								url="https://www.netdata.cloud/"
-								demoUrl="https://app.netdata.cloud/spaces/netdata-demo/rooms/all-nodes/overview?_gl=1*1dh0cmr*_gcl_au*MTg4Mjc1MDEwMS4xNzYwMDk2NzEw*_ga*MzE3NjE0MjU3LjE3NTIzMTcxNzM.*_ga_J69Z2JCTFB*czE3NjQ3MDc5MDkkbzEyJGcxJHQxNzY0NzA5NzcwJGozOCRsMCRoMA..#metrics_correlation=false&after=-900&before=0&utc=Europe%2FAthens&offset=%2B2&timezoneName=E.%20Europe&modal=&modalTab=&_o=q1ZKzkgsKvFLzE3VLUvMUbJSyk3NK413LCjIyUxOLMnMzyvWNYgvLk3CJhyQX1ySXpRarGuopKOUYpFokmqQbKprnmxuqWtiaGKqa2lgkKprYZxomWZglpacZJaoq0sd22oB"
-								visibility="Moderate"
-								visibilityNotes="Offers information over the quantity of locks active or waiting, but no further details"
-								setup="Perfection! Straightforward setup process with no issues whatsoever. Best from a enterprise provider."
-								warnSetup={false}
-								score="6.5"
-							/>
-
-							<ReviewRow
-								tool="PGBadger"
-								url="https://github.com/darold/pgbadger"
-								demoUrl="https://pgbadger.darold.net/examples/sample.html#locks-type"
-								visibility="Low"
-								visibilityNotes="Provides information via log interpretation, but it isn't suitable for live monitoring"
-								setup="N/A: I did not personally set up the tool, just used it"
-								warnSetup={false}
-								score="5"
-							/>
-
-							<ReviewRow
-								tool="PGHero"
-								url="https://github.com/ankane/pghero"
-								demoUrl="https://pghero.dokkuapp.com/"
-								visibility="None"
-								visibilityNotes="Provides no information over locks"
-								setup="Trivial to set up. Download, deploy, connect to your Postgres instance"
-								warnSetup={false}
-								score="3"
-							/>
-
-							<ReviewRow
-								tool="Redgate Monitor"
-								url="https://www.red-gate.com/products/redgate-monitor/"
-								demoUrl="https://monitor.red-gate.com/GlobalDashboard"
-								visibility="None"
-								visibilityNotes="Offers no visibility over locks"
-								setup="The worst out of all them. Offensively tediuos and unintuitive"
-								warnSetup={true}
-								score="3"
-							/>
-						</tbody>
-					</table>
-				</div>
-			</div>
 		</section>
 		<Redgate />
 		<Datadog />

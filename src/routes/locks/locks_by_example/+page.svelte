@@ -188,8 +188,8 @@ SELECT * FROM throwaway;
 				the <CodeHighlight>CONCURRENTLY</CodeHighlight> modifier. However, they're also used in another
 				atypical situation: protecting <CodeHighlight>UNIQUENESS</CodeHighlight>. If you try to
 				create two identical entries in a <CodeHighlight>UNIQUE/PRIMARY_KEY</CodeHighlight> column, the
-				first query will claim a <CodeHighlight>SHARE LOCK</CodeHighlight>. The second query will
-				then wait for the first one to complete know if it can make the change itself.
+				first query will claim a <CodeHighlight>SHARE LOCK</CodeHighlight> for the unique value. The second query will
+				then wait for the first one to complete know if it can target the value itself.
 			</p>
 			<p>To see the lock in action:</p>
 			{#snippet item18()}
@@ -273,8 +273,8 @@ COMMIT;
 			blocks what.
 		</p>
 		<p>
-			However, when there are issues, monitoring tools and Postgres logs will mainly show the lock
-			causing issues over the query that claimed it. To monitor and debug effectively, it's still
+			However, when there are issues, monitoring tools and Postgres logs will prioritizing showing the lock
+			causing issues instead of the blocking query. As a result, to monitor and debug effectively, it's still
 			useful to know what types of locks are out there and what they're intended to do.
 		</p>
 		<h4
@@ -283,8 +283,7 @@ COMMIT;
 			Table Level Locks
 		</h4>
 		<p>
-			These are locks taken on entire tables/indexes and persist from the statement that requested
-			them until the transaction completed.
+			These are locks taken on entire tables/indexes. They persist from the time they are requested until the transaction they are apart of finalizes.
 		</p>
 		<Quote
 			source={{
@@ -330,8 +329,7 @@ COMMIT;
 			Row Level Locks
 		</h4>
 		<p>
-			These are locks taken on individual rows and persist from the time statement that requested
-			them until the transaction completed.
+			These are locks taken on individual rows and persist from the time requested until the entire transaction finalizes. 
 		</p>
 		<div class="p- grid grid-cols-1 gap-4">
 			{#each rowLocks as { lock, conflicts, description }}
@@ -351,17 +349,89 @@ COMMIT;
 							{getRowOps(lock).join(', ')}
 						</span>
 					</div>
-					<div class="flex flex-wrap items-center justify-start space-x-1 text-[10px]">
-						<span class="font-medium"> BLOCKS: </span>
+					<div class="flex flex-wrap items-center justify-start text-[10px]">
+						<span class="font-medium pr-1"> BLOCKS: </span>
 						{#each conflicts as conflict, i}
 							<a href={`#${conflict}`}>{conflict}</a>
-							{#if i !== conflicts.length - 1},
+							{#if i !== conflicts.length - 1}
+							<span class='pr-1'>,</span>
 							{/if}
 						{/each}
 					</div>
 				</div>
 			{/each}
 		</div>
+
+		<h4
+			class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
+		>
+			Advisory Locks
+		</h4>
+		<p>
+			Advisory locks are custom locks you manage with your own logic via special database functions. Unlike typical locks, that are either claimed on rows or tables/indexes, advisory locks are claimed on an integer ID value. The below example, targets the value 10:
+		</p>
+		<!-- prettier-ignore  -->
+		<CodeBlock label='advisory lock one'>
+BEGIN;
+	-- claim an advisory lock on the number 10
+	SELECT pg_advisory_lock(10); 
+
+	-- some operation, such as a delete, update, ...
+
+
+	-- release the lock (must be done explicitly)
+	SELECT pg_advisory_unlock(10);
+COMMIT;
+		</CodeBlock>
+		
+		<p>
+			If another advisory lock tries to claim the number 10, it will be forced to wait:
+		</p>
+
+		<!-- prettier-ignore  -->
+		<CodeBlock label='advisory lock two'>
+BEGIN;
+	-- attempts to claim an advisory lock, but may wait on the first locked query
+	SELECT pg_advisory_lock(10); 
+
+	-- some operation, such as a delete, update, ...
+COMMIT;
+		</CodeBlock>
+
+		<p>
+			It's fairly rare to use these locks and I personally have only used them for managing custom cron jobs. Let's say you had an application level cron job that <CodeHighlight>DELETED</CodeHighlight> rows with a <CodeHighlight>created_at</CodeHighlight> value older than a week:
+		</p>
+
+		<!-- prettier-ignore  -->
+		<CodeBlock label='cron job: delete old rows'>
+BEGIN;
+
+	-- set a lock timeout, so that queries in the transaction cannot wait more than 20s for a lock
+	SET LOCAL lock_timeout TO '20s';
+
+	-- claim an advisory lock on the number 1
+	SELECT pg_advisory_lock(1); 
+
+	-- delete rows from a week ago
+	DELETE FROM some_table WHERE created_at &lt; (NOW() - '7 days'::INTERVAL);
+
+	-- release the lock (must be done explicitly or it will persist for the lifetime of the entire session no matter what)
+	SELECT pg_advisory_unlock(1);
+COMMIT;
+		</CodeBlock>
+
+	<p>
+		Let's say the above query ran every 60s as a cron job. If for any reason the query hung for more than 60s, then the cron job may issue the query again in a new session. Hypothetically, one could have a situation where 100s of these cron jobs overlap due to a bug or server degregation. That would result in redundant operations and system strain. The custom locks prevent the jobs from overlapping.
+	</p>
+
+	<p>
+		Advisory locks can be claimed at the session and transaction levels. They can also be shared (non-blocking) and exclusive (blocks both other shared and exclusive advisory locks). If you're more curious about them, you can check out their function page.
+	</p>
+
+	<p>
+		I added this portion to be thorough, but it's not common that you will ever need them.
+	</p>
+	
 	</section>
 	<h4 class="mt-8 mb-4 text-right text-xl font-bold text-stone-900">
 		<a href="/locks/lock_tool" class="a"

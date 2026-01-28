@@ -7,9 +7,9 @@
 	let activeTab = $state('error');
 
 	const tabs = [
-		{ id: 'error', label: '1. The Error' },
-		{ id: 'understanding', label: '2. Understanding it' },
-		{ id: 'fixes', label: '3. Causes & Fixes' }
+		{ id: 'error', label: 'The Error' },
+		{ id: 'understanding', label: 'Understanding' },
+		{ id: 'fixes', label: 'Causes & Fixes' }
 	];
 </script>
 

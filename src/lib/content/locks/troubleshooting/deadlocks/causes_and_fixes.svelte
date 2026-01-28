@@ -77,8 +77,8 @@ COMMIT;
 </CodeBlock>
 
 <p class="p">
-	The error logs will only capture the last query (<CodeHighlight>SELECT 1</CodeHighlight>), even if
-	earlier statements in the transaction contributed to the problematic lock. This can make debugging
+	The error logs will only capture the last statement (<CodeHighlight>SELECT 1</CodeHighlight>), even if
+	earlier statements in the transaction requested the problematic lock. This can make debugging
 	a bit less intuitive, but in general, it will usually provide enough information to deduce what
 	occurred.
 </p>
