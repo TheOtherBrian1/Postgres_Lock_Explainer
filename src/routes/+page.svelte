@@ -115,7 +115,7 @@
 			{/each}
 		</div>
 	</div>
-	<p>
+	<p class='mt-4'>
 		There are a few topics that I haven't gotten around to documenting yet, but I plan to add them soon:
 	</p>
 	{#snippet item1()}
