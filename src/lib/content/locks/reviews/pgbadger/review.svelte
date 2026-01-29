@@ -40,7 +40,7 @@
 <ImageCont src={Errors} alt="error logs" />
 
 <h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">
-	Shows frequency oflock types recorded in the logs
+	Shows frequency of lock types recorded in the logs
 </h4>
 <ImageCont src={Lock_Type} alt="lock types" />
 <h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">

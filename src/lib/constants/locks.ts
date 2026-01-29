@@ -15,7 +15,7 @@ const tableLocks = [
 		lock: 'ROW EXCLUSIVE',
 		conflicts: ['SHARE', 'SHARE ROW EXCLUSIVE', 'EXCLUSIVE', 'ACCESS EXCLUSIVE'],
 		description:
-			'Claimed by write operations and blocks indexes, materialized views, and triggers from being built, as the write operations could problematically overwrite the data being uised in index/view or inappropriately activate an incomplete trigger. It also stops changes to table access rules (like RLS updates) or operations that overwrite the table file, protecting against data loss that could occur if the system tried changing data while the file was inaccessible.'
+			'Claimed by write operations and blocks indexes, materialized views, and triggers from being built. Without it, write operations could problematically overwrite the data being relied on for the index/view build process or inappropriately activate a partially created trigger. It also stops changes to table access rules (like RLS updates) or operations that overwrite the table file, protecting against data loss that could occur if the system tried changing data while the file was inaccessible.'
 	},
 	{
 		lock: 'SHARE UPDATE EXCLUSIVE',

@@ -96,7 +96,7 @@ after 1000.050 ms
 <p class="p">
 	These types of logs usually occur when multiple slow <CodeHighlight>UPDATE</CodeHighlight> or <CodeHighlight
 		>DELETE</CodeHighlight
-	> target the same row. They cannot modify the row simultaneously, so a queue forms.
+	> target the same version of a row. They cannot modify it simultaneously, so a queue forms.
 </p>
 
 <h5 class="mt-8 mb-4 text-lg font-bold text-stone-900">Waiting log type 3: transaction lock</h5>

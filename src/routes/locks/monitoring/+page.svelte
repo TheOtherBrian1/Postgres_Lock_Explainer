@@ -35,7 +35,7 @@
 		<p class="p">
 			Locks, as stated in other sections, generally do not cause issues, but they can sometimes make
 			relatively fast queries slow. For instance, if a query normally runs for 1ms, but is often
-			blocked by another that takes 1s, then the fast query degrade severely. There are a
+			blocked by another that takes 1s, then the fast query becomes a dreadfully slow one. There are a
 			few techniques for monitoring locking activity.
 		</p>
 
@@ -462,12 +462,11 @@ sudo apt install postgresql-16 -y
 							Reconfigure the pg_hba.conf file
 						</h4>
 						<div class="pl-4">
-							<p class="p">
+							<p>
 								The <CodeHighlight>pg_hba.conf</CodeHighlight> file determines who's allowed to connect
-								to your Postgres server. If too strictly configured, the services will not be able to
-								connect. If too loosely configured, you will likely be hacked by bots. While exploring
+								to your Postgres server. If too loosely configured, you will likely be hacked by bots. While exploring
 								these services, bots actually tried to hack me over 1,000 times, so this step is actually
-								critical.
+								critical. 
 							</p>
 							<p class="p">The file can be found in the path:</p>
 							<CodeBlock label="pg_hba.conf">/etc/postgresql/16/main/pg_hba.conf</CodeBlock>
@@ -502,7 +501,7 @@ hostssl      all        all            ::0/0                    scram-sha-256
 							<CodeBlock>listen_addresses = '*' # what IP address(es) to listen on</CodeBlock>
 							<p class="p">
 								Then go to the website <a class="a" href="https://pgtune.leopard.in.ua/">pgtune</a> and
-								change your other settings based on its recommendations. Then restart the database, so
+								change your other settings based on its recommendations. Restart the database, so
 								the changes take affect.
 							</p>
 							<CodeBlock label="restart PG">sudo systemctl restart postgresql</CodeBlock>
@@ -553,7 +552,7 @@ export PGUSER=postgres
 				</DropDown>
 
 				<p class="p">
-					To test locks, I set up a <a
+					To test blocking, I set up a <a
 						href="https://www.postgresql.org/docs/current/pgbench.html"
 						class="a">PGBench</a
 					> test script to generate problematic locks. If you're unfamiliar with PGBench, it's a benchmarking

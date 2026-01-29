@@ -59,18 +59,18 @@ process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.0
 		Every 5 minutes, they had a cron job to refresh their view, but at one point, the query degraded. By the time the first refresh completed, there'd be a few more stuck pending. 
 	</p>
 	<p>
-		So, the view would refresh immediately after refreshing instead of waiting 5 minutes to execute again.
+		The queue meant that instead of waiting 5 minutes between refreshes, the moment one completed, another one would immediately be initiated.
 	</p>
 	<p>
-		The constant, redundant, rebuilding strained disk.
+		The constant and redundant rebuilding strained disk.
 	</p>
 	<p>
-		The solution was to add a <CodeHighlight>lock_timeout</CodeHighlight> configuration to the <CodeHighlight>REFRESH</CodeHighlight> requests, so they wouldn't queue needlessly.
+		The solution was to add <CodeHighlight>lock_timeout</CodeHighlight> restrictions to the <CodeHighlight>REFRESH</CodeHighlight> requests, so they wouldn't queue needlessly.
 	</p>
 	<p>
 		The database also needed some general tuning and query optomization to help improve operations overall.
 	</p>
 	<p>
-		Ideally, one should monitor for lock queues like these before the devolve into serious problems. You can go to the monitoring section to learn more about how to do this. 
+		Ideally, one should monitor for lock queues like these before the devolve into serious problems. You can go to the <a href='/locks/monitoring' class='a'>monitoring section</a> to learn more about how to do this. 
 	</p>
 </DropDown>

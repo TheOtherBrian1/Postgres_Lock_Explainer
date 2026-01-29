@@ -6,9 +6,8 @@
 <p class="p">
 	Object locks (locks on tables and indexes) are stored in memory for the duration of a transaction.
 	The amount of memory used is fairly low and frankly negligible (maybe 200 bytes on most
-	architectures). However, for historic reasons and also to prevent excessive locking, PG limits the
-	amount of object locks the DB can use at any given time. There are two settings that determine how
-	many object locks can be used:
+	architectures). However, to still be considerate of resource consumption and prevent excessive locking, PG limits the
+	amount of object locks the DB can use at any given time. There are two settings that control the limit:
 </p>
 
 <ul class="mb-10 ml-4 list-disc space-y-2">

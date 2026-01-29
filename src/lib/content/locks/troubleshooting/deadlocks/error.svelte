@@ -16,7 +16,7 @@
 
 <DropDown title='Real world example'>
 	<p>
-		As I belabor many times throughout this section, deadlocks are rare and often negligible errors. However, I recall one case where <CodeHighlight>INSERT ON CONFLICT</CodeHighlight> queries failed frequently enough by deadlocks that it affected an app's usability.
+		As I belabor many times throughout this section, deadlocks are rare and often negligible errors. I, though, recall one case where <CodeHighlight>INSERT ON CONFLICT</CodeHighlight> queries were interrupted enough by deadlocks that it affected an app's usability.
 	</p>
 	<p>
 		the <CodeHighlight>INSERT</CodeHighlight> portion would fail due to <CodeHighlight>UNIQUE</CodeHighlight> requirements, but it still held onto the lock on the original value.
@@ -31,6 +31,6 @@
 		However, by increasing hardware resources, optomizing some CPU intensive queries, and adding indexes to foreign key columns, we were able to speed up the database as a whole.
 	</p>
 	<p>
-		When all queries speed up, they're less likely to overlap during execution, so the <CodeHighlight>ON CONFLICT</CodeHighlight> queries stopped interfering with each oter. Technically, they still caused deadlocks, but the occurrences reduced enough that it was considered acceptable for the product's requirements.
+		When all queries speed up, they're less likely to overlap during execution, so the <CodeHighlight>ON CONFLICT</CodeHighlight> queries stopped interfering with each otger. Technically, they still caused deadlocks, but the occurrences reduced enough that it was considered acceptable for the product's requirements.
 	</p>
 </DropDown>

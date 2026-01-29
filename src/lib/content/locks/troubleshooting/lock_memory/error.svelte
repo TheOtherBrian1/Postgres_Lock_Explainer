@@ -20,7 +20,7 @@ Hint: You might need to increase max_locks_per_transaction.
 	<p>
 		Someone asked for my help removing a heavily partitioned table from their database. Everytime they tried to <CodeHighlight>DROP</CodeHighlight> it, they encountered the <CodeHighlight>out of shared memory</CodeHighlight> message. 
 	</p>
-	<p>Each partition required an <CodeHighlight>ACCESS EXCLUSIVE</CodeHighlight> lock and collectively, they used up more locks than the database could support. 
+	<p>Each partition required an <CodeHighlight>ACCESS EXCLUSIVE</CodeHighlight> lock. Collectively, they used up more locks than the database could support. 
 	</p>
 	<p>
 		The solution was trivial: temporariliy increase the lock limit:
@@ -29,6 +29,6 @@ Hint: You might need to increase max_locks_per_transaction.
 		ALTER DATABASE &lt;db_name&gt; SET max_locks_per_transaction TO &lt;some_int_val&gt;
 	</CodeBlock>
 	<p>
-		What wasn't trivial for me the first time around was interpretting the error message, and I hope this guide addresses that limitation for other's so they don't have to struggle through it, too.
+		What wasn't trivial for me the first time around was interpretting the error message. Hopefully, this guide removes that ambiguity for others.
 	</p>
 </DropDown>

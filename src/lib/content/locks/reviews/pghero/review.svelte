@@ -9,7 +9,7 @@
 </p>
 
 <p class="p">
-	PGHero was developed at Instacart to manage their Postgres fleet, and was recommended to me by a
+	PGHero was developed at Instacart to manage its Postgres fleet, and was recommended to me by a
 	colleague.
 </p>
 

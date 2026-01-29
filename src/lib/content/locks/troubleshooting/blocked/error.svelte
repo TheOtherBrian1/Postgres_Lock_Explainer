@@ -130,6 +130,6 @@ where pid = &lt;connection_id&gt;
 		Another <em>fun</em> situation I encountered that took half a day to debug was around a custom advisory lock that was left in an <CodeHighlight>idle-in-transaction</CodeHighlight> state due to an edge case in an app's logic. 
 	</p>
 	<p>
-		It didn't actually take a table offline, but rather crippled the database as a whole by blocking the vacuum. It didn't cause a wrap-around failure (that would've made more sense), but instead staled statistics to the point that the planner started issuing queries that saturated CPU.
+		It didn't actually take a table offline, but rather crippled the database as a whole. Confessionally, I wasn't able to find out why it had such a negative impact. My speculative explanation at the time was that it interfered heavily with the vacuum and thus statistic refreshing. It didn't cause a wrap-around failure (that would've made more sense). What we noticed is that the longer the lock was orphaned, the query planner started defaulting to more problematic and CPU saturating execution strategies. 
 	</p>
 </DropDown>

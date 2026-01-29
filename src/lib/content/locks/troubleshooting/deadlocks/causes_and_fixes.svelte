@@ -6,7 +6,7 @@
 
 <p class="p">
 	There is no magic setting that can fix deadlocks because they're not caused by any distinct set
-	up. They are a side-effect a overlapping queries taking locks on shared resources in conflicting
+	up. They are a side-effect of overlapping queries locking shared resources in conflicting
 	orders.
 </p>
 <p class="p">

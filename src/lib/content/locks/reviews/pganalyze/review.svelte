@@ -13,7 +13,7 @@
 
 <p class="p">
 	PGAnalyze has the simplest setup process of all the closed source or partially closed source tools
-	I reviewed. However, I ran into quite a few hickups when I configured my log files to a custom
+	I reviewed. However, I ran into quite a few hiccups when I reconfigured my log files to a custom
 	location.
 </p>
 <p class="p">
@@ -24,7 +24,7 @@
 <p class="p">
 	Although the UI is a bit more clunky than the other tools, it has everything one could want in a
 	lock monitoring tool and has the best query advisor in the industry. However, the UI doesn't make
-	it as trivial to identify blockers, so I rated it slightly lower.
+	it as trivial to identify blockers, so I rated it slightly lower than DataDog.
 </p>
 
 <h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">A nice overview of queries</h4>

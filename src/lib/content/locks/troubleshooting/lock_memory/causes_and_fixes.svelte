@@ -220,19 +220,13 @@ ALTER DATABASE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
 
 <!-- prettier-ignore -->
 <CodeBlock>
-SELECT
-  FORMAT('%I.%I', schemaname, relname) AS name,
-  indexrelname AS index,
-  pg_size_pretty(pg_relation_size(i.indexrelid)) AS index_size,
-  idx_scan as index_scans
-FROM pg_stat_user_indexes ui
-JOIN pg_index i ON ui.indexrelid = i.indexrelid
-WHERE
-  NOT indisunique AND idx_scan &lt; 50 AND pg_relation_size(relid) &gt; 5 * 8192
-  AND NOT schemaname LIKE ANY($1)
-ORDER BY
-  pg_relation_size(i.indexrelid) / nullif(idx_scan, 0) DESC NULLS FIRST,
-  pg_relation_size(i.indexrelid) DESC;
+select
+  relname,
+  100 * idx_scan / (seq_scan + idx_scan) as percent_of_times_index_used,
+  n_live_tup as rows_in_table
+from pg_stat_user_tables
+where seq_scan + idx_scan > 0
+order by n_live_tup desc;
 </CodeBlock>
 
 <p class="p">

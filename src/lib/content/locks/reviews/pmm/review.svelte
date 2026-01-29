@@ -32,8 +32,8 @@
 <h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">Locks held at a given time</h4>
 <ImageCont src={Conflicts} alt="graph of lock over time" />
 
-<h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">Samples queries their execution times</h4>
+<h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">Query execution times</h4>
 <ImageCont src={QueryPerformance} alt="graph of query performance over time" />
 
-<h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">Samples transaction durations</h4>
+<h4 class="mt-8 mb-4 text-lg font-bold text-stone-900">Records transaction durations</h4>
 <ImageCont src={Duration} alt="graph of transaction durations" />

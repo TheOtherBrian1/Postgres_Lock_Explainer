@@ -119,13 +119,13 @@
 		There are a few topics that I haven't gotten around to documenting yet, but I plan to add them soon:
 	</p>
 	{#snippet item1()}
-			<span>Monitoring row level locks</span>
+			<span>Obscure lock settings</span>
 	{/snippet}
 	{#snippet item2()}
 			<span>Monitoring row level locks via the pgrowlocks extension</span>
 	{/snippet}
 	{#snippet item3()}
-			<span>skip locked</span>
+			<span>The skip locked modifier</span>
 	{/snippet}
 	<UnorderedList items={[item1, item2, item3]} />
 </article>

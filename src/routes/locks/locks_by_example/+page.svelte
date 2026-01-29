@@ -189,7 +189,7 @@ SELECT * FROM throwaway;
 				atypical situation: protecting <CodeHighlight>UNIQUENESS</CodeHighlight>. If you try to
 				create two identical entries in a <CodeHighlight>UNIQUE/PRIMARY_KEY</CodeHighlight> column, the
 				first query will claim a <CodeHighlight>SHARE LOCK</CodeHighlight> for the unique value. The second query will
-				then wait for the first one to complete know if it can target the value itself.
+				then wait for the first one to complete know if it can write with the value, too.
 			</p>
 			<p>To see the lock in action:</p>
 			{#snippet item18()}
@@ -273,7 +273,7 @@ COMMIT;
 			blocks what.
 		</p>
 		<p>
-			However, when there are issues, monitoring tools and Postgres logs will prioritizing showing the lock
+			However, when there are issues, monitoring tools and Postgres logs will prioritize showing the lock
 			causing issues instead of the blocking query. As a result, to monitor and debug effectively, it's still
 			useful to know what types of locks are out there and what they're intended to do.
 		</p>
@@ -329,7 +329,7 @@ COMMIT;
 			Row Level Locks
 		</h4>
 		<p>
-			These are locks taken on individual rows and persist from the time requested until the entire transaction finalizes. 
+			These are locks taken on individual versions of rows and persist from the time requested until the entire transaction finalizes. 
 		</p>
 		<div class="p- grid grid-cols-1 gap-4">
 			{#each rowLocks as { lock, conflicts, description }}
@@ -376,7 +376,7 @@ BEGIN;
 	-- claim an advisory lock on the number 10
 	SELECT pg_advisory_lock(10); 
 
-	-- some operation, such as a delete, update, ...
+	-- some operations, such as a deletes, updates, ...
 
 
 	-- release the lock (must be done explicitly)
@@ -385,7 +385,7 @@ COMMIT;
 		</CodeBlock>
 		
 		<p>
-			If another advisory lock tries to claim the number 10, it will be forced to wait:
+			If another advisory lock tries to claim a lock referencing the advisory lock ID 10, it will be forced to wait:
 		</p>
 
 		<!-- prettier-ignore  -->
@@ -399,7 +399,7 @@ COMMIT;
 		</CodeBlock>
 
 		<p>
-			It's fairly rare to use these locks and I personally have only used them for managing custom cron jobs. Let's say you had an application level cron job that <CodeHighlight>DELETED</CodeHighlight> rows with a <CodeHighlight>created_at</CodeHighlight> value older than a week:
+			It's fairly rare to use these locks and I personally have only used them for managing custom cron jobs. Let's say you had an application level, cron job that <CodeHighlight>DELETED</CodeHighlight> rows every old rows every 60s:
 		</p>
 
 		<!-- prettier-ignore  -->
@@ -421,15 +421,15 @@ COMMIT;
 		</CodeBlock>
 
 	<p>
-		Let's say the above query ran every 60s as a cron job. If for any reason the query hung for more than 60s, then the cron job may issue the query again in a new session. Hypothetically, one could have a situation where 100s of these cron jobs overlap due to a bug or server degregation. That would result in redundant operations and system strain. The custom locks prevent the jobs from overlapping.
+		If for any reason the query hung for more than 60s, then the cron job may issue the query again in a new session. Hypothetically, one could have a situation where 100s of these cron job queries overlap due to a bug or server degregation. That would result in redundant operations and system strain. The custom locks prevent them from overlapping.
 	</p>
 
 	<p>
-		Advisory locks can be claimed at the session and transaction levels. They can also be shared (non-blocking) and exclusive (blocks both other shared and exclusive advisory locks). If you're more curious about them, you can check out their function page.
+		Advisory locks can be claimed at the session and transaction levels. They can also be shared (blocks exclusive advisory locks, but not other shared) or exclusive (blocks both other shared and exclusive advisory locks). If you're more curious about them, you can check out their function page.
 	</p>
 
 	<p>
-		I added this portion to be thorough, but it's not common that you will ever need them.
+		I added this portion to be thorough, but it's fairly rare to need them.
 	</p>
 	
 	</section>
