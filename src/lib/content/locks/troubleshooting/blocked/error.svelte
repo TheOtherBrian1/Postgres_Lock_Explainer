@@ -122,6 +122,7 @@ where pid = &lt;connection_id&gt;
 	</p>
 	<p>
 		We were able to get rid of the orphaned lock with the nuclear option (fast restrt the DB). 
+	</p>
 	<p>
 		Fotunately, the bug has been patched in newer versions of the extension.
 	</p>
