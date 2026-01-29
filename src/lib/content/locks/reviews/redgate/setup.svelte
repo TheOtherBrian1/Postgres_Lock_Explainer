@@ -9,7 +9,7 @@
 	import AddServer from '$lib/assets/Redgate/add_server.png';
 	import AdminLogin from '$lib/assets/Redgate/admin.png';
 	import Details from '$lib/assets/Redgate/details.png';
-	import SelectPG from '$lib/assets/Redgate/select_pg.png';
+	import SelectPG from '$lib/assets/Redgate/select_PG.png';
 </script>
 
 <p class="p">For Redgate, you download two pieces of software:</p>

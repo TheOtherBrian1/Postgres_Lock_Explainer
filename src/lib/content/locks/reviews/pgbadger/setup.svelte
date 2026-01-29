@@ -9,5 +9,5 @@
 	import AddServer from '$lib/assets/Redgate/add_server.png';
 	import AdminLogin from '$lib/assets/Redgate/admin.png';
 	import Details from '$lib/assets/Redgate/details.png';
-	import SelectPG from '$lib/assets/Redgate/select_pg.png';
+	import SelectPG from '$lib/assets/Redgate/select_PG.png';
 </script>
