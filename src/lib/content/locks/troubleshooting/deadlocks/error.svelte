@@ -25,12 +25,12 @@
 		When the query transitioned to <CodeHighlight>UPDATE</CodeHighlight>, it would then target another ID value. Another <CodeHighlight>INSERT ON CONFLICT</CodeHighlight> would target the same IDs in reverse, leading to deadlocks on an <CodeHighlight>UNIQUE INDEX</CodeHighlight> 
 	</p>
 	<p>
-		The solution normally would be to refactor to avoid <CodeHighlight>ON CONFLICT</CodeHighlight> altogether.
+		The solution normally would be to explicitly sort/order the operations. There's a <a href= 'https://stackoverflow.com/questions/46366324/postgres-deadlocks-on-concurrent-upserts' class='a'>StackOverflow thread</a> that outlines the process.
 	</p>
 	<p>
 		However, by increasing hardware resources, optomizing some CPU intensive queries, and adding indexes to foreign key columns, we were able to speed up the database as a whole.
 	</p>
 	<p>
-		When all queries speed up, they're less likely to overlap during execution, so the <CodeHighlight>ON CONFLICT</CodeHighlight> queries stopped interfering with each otger. Technically, they still caused deadlocks, but the occurrences reduced enough that it was considered acceptable for the product's requirements.
+		When all queries speed up, they're less likely to overlap during execution, so the <CodeHighlight>ON CONFLICT</CodeHighlight> queries stopped interfering with each other. Technically, they still caused deadlocks, but the occurrences reduced enough that it was considered acceptable for the product's requirements without major refactoring.
 	</p>
 </DropDown>

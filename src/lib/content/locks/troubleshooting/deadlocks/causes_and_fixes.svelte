@@ -18,7 +18,7 @@
 	Speed up queries with optomization techniques or hardware improvements, so they're less likely to
 	overlap
 {/snippet}
-{#snippet item2()}
+{#snippet item4()}
 	Be conservative with transactions that perform multiple statements, such as multiple <CodeHighlight
 		>UPDATES</CodeHighlight
 	> queries.
@@ -38,9 +38,13 @@ COMMIT;
 	and <CodeHighlight>MERGES</CodeHighlight> are also more vulnerable to these errors.
 {/snippet}
 {#snippet item3()}
-	Use a Postgres linter, like <a class="a" href="https://squawkhq.com/">squawkhq</a> when issuing migrations
+	Use a Postgres linter, like <a class="a" href="https://squawkhq.com/">squawkhq</a> when issuing migrations.
 {/snippet}
-<NumberedList items={[item1, item2, item3]} />
+{#snippet item2()}
+	In some cases, it is possible to pre-order operations, so that they do not compete. There's a
+<a href= 'https://stackoverflow.com/questions/46366324/postgres-deadlocks-on-concurrent-upserts' class='a'>StackOverflow discussion</a> that discusses one such strategy for <CodeHighlight>INSERT ON CONFLICT</CodeHighlight> queries.
+{/snippet}
+<NumberedList items={[item1, item2, item3, item4]} />
 
 <p class="p">
 	When you encounter the error, filter your logs for the keywords <CodeHighlight
