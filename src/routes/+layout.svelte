@@ -35,7 +35,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" type="image/x-icon" href={favicon} />
 </svelte:head>
 
 <div class=" from-bg-[#F9F8F6] relative w-full px-0 md:px-20 md:pt-4">
