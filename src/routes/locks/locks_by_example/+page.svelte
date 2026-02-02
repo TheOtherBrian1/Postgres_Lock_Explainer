@@ -174,7 +174,6 @@ SELECT * FROM throwaway;
 			</div>
 		{/snippet}
 		<NumberedList not_p={true} items={[item14, item15, item16, item17]} />
-
 		<!-- divider -->
 
 		<div class="ml-3">
@@ -188,8 +187,8 @@ SELECT * FROM throwaway;
 				the <CodeHighlight>CONCURRENTLY</CodeHighlight> modifier. However, they're also used in another
 				atypical situation: protecting <CodeHighlight>UNIQUENESS</CodeHighlight>. If you try to
 				create two identical entries in a <CodeHighlight>UNIQUE/PRIMARY_KEY</CodeHighlight> column, the
-				first query will claim a <CodeHighlight>SHARE LOCK</CodeHighlight> for the unique value. The second query will
-				then wait for the first one to complete know if it can write with the value, too.
+				first query will claim a <CodeHighlight>SHARE LOCK</CodeHighlight> for the unique value. The second
+				query will then wait for the first one to complete know if it can write with the value, too.
 			</p>
 			<p>To see the lock in action:</p>
 			{#snippet item18()}
@@ -273,9 +272,10 @@ COMMIT;
 			blocks what.
 		</p>
 		<p>
-			However, when there are issues, monitoring tools and Postgres logs will prioritize showing the lock
-			causing issues instead of the blocking query. As a result, to monitor and debug effectively, it's still
-			useful to know what types of locks are out there and what they're intended to do.
+			However, when there are issues, monitoring tools and Postgres logs will prioritize showing the
+			lock causing issues instead of the blocking query. As a result, to monitor and debug
+			effectively, it's still useful to know what types of locks are out there and what they're
+			intended to do.
 		</p>
 		<h4
 			class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
@@ -283,7 +283,8 @@ COMMIT;
 			Table Level Locks
 		</h4>
 		<p>
-			These are locks taken on entire tables/indexes. They persist from the time they are requested until the transaction they are apart of finalizes.
+			These are locks taken on entire tables/indexes. They persist from the time they are requested
+			until the transaction they are apart of finalizes.
 		</p>
 		<Quote
 			source={{
@@ -329,7 +330,8 @@ COMMIT;
 			Row Level Locks
 		</h4>
 		<p>
-			These are locks taken on individual versions of rows and persist from the time requested until the entire transaction finalizes. 
+			These are locks taken on individual versions of rows and persist from the time requested until
+			the entire transaction finalizes.
 		</p>
 		<div class="p- grid grid-cols-1 gap-4">
 			{#each rowLocks as { lock, conflicts, description }}
@@ -350,11 +352,11 @@ COMMIT;
 						</span>
 					</div>
 					<div class="flex flex-wrap items-center justify-start text-[10px]">
-						<span class="font-medium pr-1"> BLOCKS: </span>
+						<span class="pr-1 font-medium"> BLOCKS: </span>
 						{#each conflicts as conflict, i}
 							<a href={`#${conflict}`}>{conflict}</a>
 							{#if i !== conflicts.length - 1}
-							<span class='pr-1'>,</span>
+								<span class="pr-1">,</span>
 							{/if}
 						{/each}
 					</div>
@@ -368,7 +370,9 @@ COMMIT;
 			Advisory Locks
 		</h4>
 		<p>
-			Advisory locks are custom locks you manage with your own logic via special database functions. Unlike typical locks, that are either claimed on rows or tables/indexes, advisory locks are claimed on an integer ID value. The below example, targets the value 10:
+			Advisory locks are custom locks you manage with your own logic via special database functions.
+			Unlike typical locks, that are either claimed on rows or tables/indexes, advisory locks are
+			claimed on an integer ID value. The below example, targets the value 10:
 		</p>
 		<!-- prettier-ignore  -->
 		<CodeBlock label='advisory lock one'>
@@ -383,9 +387,10 @@ BEGIN;
 	SELECT pg_advisory_unlock(10);
 COMMIT;
 		</CodeBlock>
-		
+
 		<p>
-			If another advisory lock tries to claim a lock referencing the advisory lock ID 10, it will be forced to wait:
+			If another advisory lock tries to claim a lock referencing the advisory lock ID 10, it will be
+			forced to wait:
 		</p>
 
 		<!-- prettier-ignore  -->
@@ -399,7 +404,10 @@ COMMIT;
 		</CodeBlock>
 
 		<p>
-			It's fairly rare to use these locks and I personally have only used them for managing custom cron jobs. Let's say you had an application level, cron job that <CodeHighlight>DELETED</CodeHighlight> rows every old rows every 60s:
+			It's fairly rare to use these locks and I personally have only used them for managing custom
+			cron jobs. Let's say you had an application level, cron job that <CodeHighlight
+				>DELETED</CodeHighlight
+			> rows every old rows every 60s:
 		</p>
 
 		<!-- prettier-ignore  -->
@@ -420,18 +428,21 @@ BEGIN;
 COMMIT;
 		</CodeBlock>
 
-	<p>
-		If for any reason the query hung for more than 60s, then the cron job may issue the query again in a new session. Hypothetically, one could have a situation where 100s of these cron job queries overlap due to a bug or server degregation. That would result in redundant operations and system strain. The custom locks prevent them from overlapping.
-	</p>
+		<p>
+			If for any reason the query hung for more than 60s, then the cron job may issue the query
+			again in a new session. Hypothetically, one could have a situation where 100s of these cron
+			job queries overlap due to a bug or server degregation. That would result in redundant
+			operations and system strain. The custom locks prevent them from overlapping.
+		</p>
 
-	<p>
-		Advisory locks can be claimed at the session and transaction levels. They can also be shared (blocks exclusive advisory locks, but not other shared) or exclusive (blocks both other shared and exclusive advisory locks). If you're more curious about them, you can check out their function page.
-	</p>
+		<p>
+			Advisory locks can be claimed at the session and transaction levels. They can also be shared
+			(blocks exclusive advisory locks, but not other shared) or exclusive (blocks both other shared
+			and exclusive advisory locks). If you're more curious about them, you can check out their
+			function page.
+		</p>
 
-	<p>
-		I added this portion to be thorough, but it's fairly rare to need them.
-	</p>
-	
+		<p>I added this portion to be thorough, but it's fairly rare to need them.</p>
 	</section>
 	<h4 class="mt-8 mb-4 text-right text-xl font-bold text-stone-900">
 		<a href="/locks/lock_tool" class="a"
