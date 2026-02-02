@@ -443,4 +443,9 @@
 			</div>
 		</div>
 	</section>
+	<h4 class="mt-8 mb-4 text-right text-xl font-bold text-stone-900">
+		<a href="/locks/troubleshooting" class="a"
+			>Next Section <span class="relative top-[1px] inline">→</span></a
+		>
+	</h4>
 </article>
