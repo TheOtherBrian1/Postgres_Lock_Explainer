@@ -1,7 +1,7 @@
 <!-- 
 	Hello again, it looks like you really enjoy checking my code. That's fine and dandy.
 	All the data used by the lock monitor graph was manually obtained by me, @theotherbrian1.
-	I added my sources, which took quite a bit of time to obtain.CodeBlock
+	I added my sources, which took quite a bit of time to obtain.
 
 	However, this component was coded predominantly by AI. I had orignally coded the list version by hand
 	and figured I would see what would happen if I fed it to Gemini. To my suprise, it didn't rely on external libraries, 
