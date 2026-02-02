@@ -29,8 +29,8 @@ Hint: You might need to increase max_locks_per_transaction.
 		used up more locks than the database could support.
 	</p>
 	<p>
-		The solutions were trivial: remove the individual partitions in small batches or temporariliy
-		increase the lock limit:
+		The solutions were trivial: either remove the individual partitions in small batches or
+		temporariliy increase the lock limit:
 	</p>
 	<CodeBlock label="modify max_locks_per_transaction">
 		ALTER DATABASE &lt;db_name&gt; SET max_locks_per_transaction TO &lt;some_int_val&gt;
