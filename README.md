@@ -11,7 +11,7 @@ This site represents the documentation and resources I wish existed when I was l
 
 The whole project took a lot of effort to complete, so I hope you find it insightful. I also added a lock blocker tool that shows what operations interfere with others:
 
-![lock blocking tool](/src/assets/Tool.gif)
+![lock blocking tool](src/assets/Tool.gif)
 
 ### About the site
 
