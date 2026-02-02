@@ -405,9 +405,9 @@ COMMIT;
 
 		<p>
 			It's fairly rare to use these locks and I personally have only used them for managing custom
-			cron jobs. Let's say you had an application level, cron job that <CodeHighlight
+			cron jobs. Let's say you had an application level job that <CodeHighlight
 				>DELETED</CodeHighlight
-			> rows every old rows every 60s:
+			> old rows every 60s:
 		</p>
 
 		<!-- prettier-ignore  -->
@@ -430,16 +430,20 @@ COMMIT;
 
 		<p>
 			If for any reason the query hung for more than 60s, then the cron job may issue the query
-			again in a new session. Hypothetically, one could have a situation where 100s of these cron
-			job queries overlap due to a bug or server degregation. That would result in redundant
-			operations and system strain. The custom locks prevent them from overlapping.
+			again in a new session. Hypothetically, one could have a situation where 100s of these jobs
+			overlap due to a bug or server degregation. That would result in redundant operations and
+			system strain. The custom locks is a failsafe against this outcome.
 		</p>
 
 		<p>
 			Advisory locks can be claimed at the session and transaction levels. They can also be shared
 			(blocks exclusive advisory locks, but not other shared) or exclusive (blocks both other shared
 			and exclusive advisory locks). If you're more curious about them, you can check out their
-			function page.
+			<a
+				class="a"
+				href="https://www.postgresql.org/docs/current/functions-admin.html#FUNCTIONS-ADVISORY-LOCKS"
+				>function page</a
+			>.
 		</p>
 
 		<p>I added this portion to be thorough, but it's fairly rare to need them.</p>
