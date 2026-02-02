@@ -85,18 +85,18 @@ where pid = &lt;connection_id&gt;
 <CodeBlock>
 -- just for a transaction 
 BEGIN; 
-  SET LOCAL idle_transaction_session_timeout TO '10s';
+  SET LOCAL idle_in_transaction_session_timeout TO '10s';
   -- your queries 
 COMMIT; 
 
 -- for a connection 
-SET idle_transaction_session_timeout TO '10s'; 
+SET idle_in_transaction_session_timeout TO '10s'; 
 
 -- for a specific role 
-ALTER ROLE &lt;some_role&gt; SET idle_transaction_session_timeout TO '10s'; 
+ALTER ROLE &lt;some_role&gt; SET idle_in_transaction_session_timeout TO '10s'; 
 
 -- for the entire database 
-ALTER DATABASE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
+ALTER DATABASE &lt;some_db&gt; SET idle_in_transaction_session_timeout TO '10s';
 </CodeBlock>
 
 <p>

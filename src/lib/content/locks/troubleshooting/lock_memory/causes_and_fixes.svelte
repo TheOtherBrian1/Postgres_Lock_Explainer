@@ -3,49 +3,6 @@
 	import CodeHighlight from '$lib/components/code_highlight.svelte';
 </script>
 
-<!-- <h4 class="mb-4 text-xl font-bold text-stone-900">Cause 1: Partitioning</h4>
-<p class="mb-4">
-  If you have heavily partitioned tables, each sub-table can be locked,
-  exhausting your lock threshold.
-</p>
-<CodeBlock label="modify max_locks_per_transaction">
-  ALTER DATABASE &lt;db_name&gt; SET max_locks_per_transaction TO
-  &lt;some_int_val&gt;
-</CodeBlock>
-
-<h4 class="mt-8 mb-4 text-xl font-bold text-stone-900">
-  Cause 2: Connection leaks
-</h4>
-<p>
-  Connection leaks occur when you start a transaction with a <CodeHighlight
-    >BEGIN</CodeHighlight
-  > command, but then forget to conclude it with a <CodeHighlight
-    >COMMIT</CodeHighlight
-  >. Set a timeout to kill these automatically:
-</p>
-<CodeBlock>
-  -- for the entire database ALTER ROLE &lt;some_db&gt; SET
-  idle_transaction_session_timeout TO '10s';
-</CodeBlock>
-
-<h4 class="mt-8 mb-4 text-xl font-bold text-stone-900">
-  Cause 3: Small servers
-</h4>
-<p>
-  If your connection pool size is high relative to server power. Increase <CodeHighlight
-    >max_locks_per_transaction</CodeHighlight
-  >.
-</p>
-
-<h4 class="mt-8 mb-4 text-xl font-bold text-stone-900">
-  Cause 4: Complex joins & triggers
-</h4>
-<p>
-  Joins, foreign keys, and triggers cause queries against one table to extend to
-  others. The first approach is to remove redundant indexes. If refactoring is
-  not an option, increase the lock limit setting.
-</p> -->
-
 <p class="p">
 	It's rare for queries to claim enough locks to cause this error. In my experience, it occurs in
 	four scenarios and the solution depends on the underlying cause:
@@ -142,7 +99,7 @@ WHERE
 	<a
 		class="a"
 		href="https://www.postgresql.org/docs/current/runtime-config-locks.html#GUC-DEADLOCK-TIMEOUT"
-		>idle_transaction_session_timeout</a
+		>idle_in_transaction_session_timeout</a
 	>. It'll kill transactions that are left open doing nothing after the limit is reached.
 </p>
 
@@ -150,18 +107,18 @@ WHERE
 <CodeBlock>
 -- just for a transaction 
 BEGIN; 
-  SET LOCAL idle_transaction_session_timeout TO '10s'; 
+  SET LOCAL idle_in_transaction_session_timeout TO '10s'; 
   -- your queries 
 COMMIT; 
 
 -- for a connection 
-SET idle_transaction_session_timeout TO '10s'; 
+SET idle_in_transaction_session_timeout TO '10s'; 
 
 -- for a specific role 
-ALTER ROLE &lt;some_role&gt; SET idle_transaction_session_timeout TO '10s'; 
+ALTER ROLE &lt;some_role&gt; SET idle_in_transaction_session_timeout TO '10s'; 
 
 -- for the entire database 
-ALTER DATABASE &lt;some_db&gt; SET idle_transaction_session_timeout TO '10s';
+ALTER DATABASE &lt;some_db&gt; SET idle_in_transaction_session_timeout TO '10s';
 </CodeBlock>
 
 <p class="p">
