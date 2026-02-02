@@ -45,7 +45,7 @@
 		<SectionHeader>About Me</SectionHeader>
 		<p>
 			I, <a class="a" href="https://github.com/TheOtherBrian1">@TheOtherBrian1</a>, currently work
-			as a support engineer with a focus in Postgres management and observability. 
+			as a customer reliability engineer with a focus in Postgres management and observability.
 		</p>
 		<p>
 			This site represents the documentation and resources I wish existed when I was learning about
@@ -64,7 +64,7 @@
 		{/snippet}
 		{#snippet item4()}
 			Outline real world examples of how locks impact projects
-		{/snippet} 
+		{/snippet}
 		<NumberedList items={[item1, item2, item3, item4]} />
 		<p>The whole project took a lot of effort to complete, so I hope you find it insightful.</p>
 	</section>
@@ -88,7 +88,7 @@
 					class=" group rounded-xl border border-stone-200 bg-stone-50 p-5 transition-all hover:border-amber-200 hover:bg-amber-50/50 hover:shadow-sm"
 				>
 					<h4
-						class="flex underline items-center gap-2.5 text-lg font-bold text-stone-900 group-hover:text-amber-800"
+						class="flex items-center gap-2.5 text-lg font-bold text-stone-900 underline group-hover:text-amber-800"
 					>
 						<span
 							class="h-2 w-2 shrink-0 rounded-full bg-stone-400 transition-colors group-hover:bg-amber-500"
@@ -115,17 +115,18 @@
 			{/each}
 		</div>
 	</div>
-	<p class='mt-4'>
-		There are a few topics that I haven't gotten around to documenting yet, but I plan to add them soon:
+	<p class="mt-4">
+		There are a few topics that I haven't gotten around to documenting yet, but I plan to add them
+		soon:
 	</p>
 	{#snippet item1()}
-			<span>Obscure lock settings</span>
+		<span>Obscure lock settings</span>
 	{/snippet}
 	{#snippet item2()}
-			<span>Monitoring row level locks via the pgrowlocks extension</span>
+		<span>Monitoring row level locks via the pgrowlocks extension</span>
 	{/snippet}
 	{#snippet item3()}
-			<span>The skip locked modifier</span>
+		<span>The skip locked modifier</span>
 	{/snippet}
 	<UnorderedList items={[item1, item2, item3]} />
 </article>
