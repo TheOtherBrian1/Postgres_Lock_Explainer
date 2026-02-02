@@ -1,39 +1,18 @@
-# sv
+# Postgres Lock Explainer
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+This site represents the documentation and resources I wish existed when I was learning about locks.
 
-## Creating a project
+## My site's goal is to
 
-If you're seeing this, you've probably already done this step. Congrats!
+1. Explain locks conceptually
+2. Review monitoring tools
+3. Troubleshoot common issues
+4. Outline real world examples of how locks impact projects
 
-```sh
-# create a new project in the current directory
-npx sv create
+The whole project took a lot of effort to complete, so I hope you find it insightful. I also added a lock blocker tool that shows what operations interfere with others:
 
-# create a new project in my-app
-npx sv create my-app
-```
+![lock blocking tool](/src/assets/Tool.gif)
 
-## Developing
+### About the site
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-# Postgres_Cookbook
+The site is coded in Sveltekit 5.0 and is hosted with Cloudflare Workers. 
