@@ -45,7 +45,7 @@
 		<SectionHeader>About Me</SectionHeader>
 		<p>
 			I, <a class="a" href="https://github.com/TheOtherBrian1">@TheOtherBrian1</a>, currently work
-			as a customer reliability engineer with a focus in Postgres management and observability.
+			as a support engineer with a focus in Postgres management and observability.
 		</p>
 		<p>
 			This site represents the documentation and resources I wish existed when I was learning about
