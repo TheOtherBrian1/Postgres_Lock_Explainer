@@ -1,5 +1,6 @@
 <script lang="ts">
 	import './layout.css';
+	import GitHub from '$lib/assets/GitHub_Invertocat_White.svg';
 	import favicon from '$lib/assets/favicon.svg';
 
 	import Header from '$lib/components/header.svelte';

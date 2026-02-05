@@ -35,8 +35,8 @@
 		<p class="p">
 			Locks, as stated in other sections, generally do not cause issues, but they can sometimes make
 			relatively fast queries slow. For instance, if a query normally runs for 1ms, but is often
-			blocked by another that takes 1s, then the fast query becomes a dreadfully slow one. There are a
-			few techniques for monitoring locking activity.
+			blocked by another that takes 1s, then the fast query becomes a dreadfully slow one. There are
+			a few techniques for monitoring locking activity.
 		</p>
 
 		<SectionHeader>Viewing lock trees in real time</SectionHeader>
@@ -50,9 +50,9 @@
 		<CodeBlock>SELECT * FROM pg_locks;</CodeBlock>
 
 		<p>
-			However, the output isn't the most interpretable. Either or, at the end of the day, the amount of locks doesn't matter.
-			What really matters is the amount of blocking. To get that information, one needs to use
-			another view called <a
+			However, the output isn't the most interpretable. Either or, at the end of the day, the amount
+			of locks doesn't matter. What really matters is the amount of blocking. To get that
+			information, one needs to use another view called <a
 				href="https://www.postgresql.org/docs/current/monitoring-stats.html#MONITORING-PG-STAT-ACTIVITY-VIEW"
 				class="a">pg_stat_activity</a
 			>.
@@ -135,6 +135,106 @@ SELECT pg_blocking_pids(pid_of_blocked_process);
 			<a href="https://postgres.ai/blog/20211018-postgresql-lock-trees" class="a">Postgres.ai</a> have
 			examples on how to do it.
 		</p>
+
+		<p>
+			Datadog and PgAnalyze also have lock tree queries. I was able to capture the queries and I'm
+			including them below if anyone is curious:
+		</p>
+		<DropDown title="Datadog and PGAnalyze queries">
+			<h4>Datadog query</h4>
+			<!-- prettier-ignore  -->
+			<CodeBlock label = 'Datadog lock tree query'>
+/* service='datadog-agent' */
+SELECT
+    clock_timestamp() AS now,
+    datid,
+    datname,
+    pid,
+    usesysid,
+    usename,
+    application_name,
+    client_addr,
+    client_hostname,
+    client_port,
+    backend_start,
+    xact_start,
+    query_start,
+    state_change,
+    wait_event_type,
+    wait_event,
+    state,
+    backend_xid,
+    backend_xmin,
+    query,
+    backend_type::bytea AS backend_type,
+    pg_blocking_pids(pid) AS blocking_pids
+FROM pg_stat_activity
+WHERE
+    backend_type != 'client backend'
+    OR (
+        COALESCE(TRIM(query), '') != ''
+        AND pid != pg_backend_pid()
+        AND query_start IS NOT NULL
+        AND datname NOT ILIKE 'template0'
+        AND datname NOT ILIKE 'template1'
+        AND datname NOT ILIKE 'rdsadmin'
+        AND datname NOT ILIKE 'azure_maintenance'
+        AND datname NOT ILIKE 'cloudsqladmin'
+        AND datname NOT ILIKE 'alloydbadmin'
+        AND datname NOT ILIKE 'alloydbmetadata'
+        AND NOT (
+            query_start &lt; NOW() --&lth----modified to NOW() instead of a hard-coded timestamp. Consider changing time range
+            AND state = 'idle'
+        )
+    );
+
+		</CodeBlock>
+
+			<h4>PGAnalyze query</h4>
+
+			<!-- prettier-ignore  -->
+			<CodeBlock label = 'PGAnalyze lock tree query'>
+SELECT
+    (
+        extract(epoch FROM COALESCE(backend_start, pg_catalog.pg_postmaster_start_time()))::int::text
+        || pg_catalog.to_char(pid, 'FM0000000')
+    )::bigint AS session_id,
+
+    datid,
+    datname,
+    usesysid,
+    usename,
+    pid,
+    application_name,
+    client_addr::text,
+    client_port,
+    backend_start,
+    xact_start,
+    query_start,
+    state_change,
+
+    (COALESCE(wait_event_type, '') = 'Lock') AS waiting,
+
+    backend_xid,
+    backend_xmin,
+    wait_event_type,
+    wait_event,
+    backend_type,
+
+    CASE
+        WHEN COALESCE(wait_event_type, '') = 'Lock'
+        THEN pg_blocking_pids(pid)
+        ELSE NULL
+    END AS blocking_pids,
+
+    state,
+    query
+
+FROM pg_stat_activity
+WHERE pid IS NOT NULL;
+
+		</CodeBlock>
+		</DropDown>
 		<!-- <p>To not overwhelm anyone, I put the lock tree analyzer query in the drop down.</p> -->
 
 		<!-- <DropDown title="Find blockers">
@@ -142,8 +242,8 @@ SELECT pg_blocking_pids(pid_of_blocked_process);
 		</DropDown> -->
 
 		<p>
-			The query could be run periodically to collect blocking metrics. Alternatively, it can just be
-			run manually to help with performance investiations.
+			Lock tree queries can be run periodically to collect blocking metrics. Alternatively, one
+			could just be run manually to help with performance investiations.
 		</p>
 		<p>
 			The Postgres doc states the following warning about <CodeHighlight
@@ -172,8 +272,9 @@ SELECT pg_blocking_pids(pid_of_blocked_process);
 
 		<SectionHeader>Monitoring via the logs</SectionHeader>
 		<p>
-			This was discussed in the <a class='a' href="/locks/troubleshooting">troubleshooting section</a>, but there
-			are certain log settings one can use to record lock queues. 
+			This was discussed in the <a class="a" href="/locks/troubleshooting"
+				>troubleshooting section</a
+			>, but there are certain log settings one can use to record lock queues.
 		</p>
 		<Quote notItalic={true}>
 			<p class="p">
@@ -254,8 +355,8 @@ process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.0
 			<SectionHeader>Professional Monitoring Tools</SectionHeader>
 			<p>There are a lot of popular tools for monitoring Postgres performance</p>
 			<p>
-				I went through the process of investigating the most recognizable ones to see how much visibility
-				they gave over locking.
+				I went through the process of investigating the most recognizable ones to see how much
+				visibility they gave over locking.
 			</p>
 			<p class="p mb-4">My guidelines were a bit opinionated, but in general:</p>
 			{#snippet item1()}
@@ -273,7 +374,7 @@ process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.0
 			<UnorderedList color="red" items={[item1, item2, item3]} />
 
 			<p>The more comprehensive review is at the end, but the summary is:</p>
-						<div class="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
+			<div class="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
 				<div class="overflow-x-auto">
 					<table class="w-full text-left text-sm text-stone-600">
 						<caption class="caption-top px-6 py-4 text-left text-lg font-medium text-stone-700">
@@ -464,9 +565,9 @@ sudo apt install postgresql-16 -y
 						<div class="pl-4">
 							<p>
 								The <CodeHighlight>pg_hba.conf</CodeHighlight> file determines who's allowed to connect
-								to your Postgres server. If too loosely configured, you will likely be hacked by bots. While exploring
-								these services, bots actually tried to hack me over 1,000 times, so this step is actually
-								critical. 
+								to your Postgres server. If too loosely configured, you will likely be hacked by bots.
+								While exploring these services, bots actually tried to hack me over 1,000 times, so this
+								step is actually critical.
 							</p>
 							<p class="p">The file can be found in the path:</p>
 							<CodeBlock label="pg_hba.conf">/etc/postgresql/16/main/pg_hba.conf</CodeBlock>
@@ -501,8 +602,8 @@ hostssl      all        all            ::0/0                    scram-sha-256
 							<CodeBlock>listen_addresses = '*' # what IP address(es) to listen on</CodeBlock>
 							<p class="p">
 								Then go to the website <a class="a" href="https://pgtune.leopard.in.ua/">pgtune</a> and
-								change your other settings based on its recommendations. Restart the database, so
-								the changes take affect.
+								change your other settings based on its recommendations. Restart the database, so the
+								changes take affect.
 							</p>
 							<CodeBlock label="restart PG">sudo systemctl restart postgresql</CodeBlock>
 						</div>
@@ -691,8 +792,6 @@ pgbench \
 					</p>
 				</Quote>
 			</DropDown>
-
-
 		</section>
 		<Redgate />
 		<Datadog />
