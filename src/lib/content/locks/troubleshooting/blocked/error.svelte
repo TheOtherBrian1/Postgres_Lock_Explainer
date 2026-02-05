@@ -106,31 +106,43 @@ from pg_stat_activity
 where pid = &lt;connection_id&gt;
 </CodeBlock>
 
+<DropDown title="Real world example">
+	<p>
+		This type of error is legitimate crisis and the customers I work with have summoned me at odd
+		hours to diagnose it. Usually, I run the above tests, kill the offending query, and then go back
+		to sleep.
+	</p>
+	<p>
+		In most cases, a developer just issued a <CodeHighlight>DROP/ALTER/CREATE</CodeHighlight> command
+		that gut stuck behind a very slow transaction or was left in an <CodeHighlight
+			>idle-in-transaction</CodeHighlight
+		> state by a tired developer.
+	</p>
+	<p>
+		These issues can be prevented by using a migration linter or just using the <CodeHighlight
+			>lock_timeout</CodeHighlight
+		> setting.
+	</p>
+	<p>
+		One novel case I recall had to do with a bug in the <CodeHighlight>PGGroonga</CodeHighlight> extension.
+		It used a custom implementation of locks to manage an internal index. There was an edge case that
+		caused the lock to be orphaned during periods of severe memory strain, causing all writes against
+		the index to pend indefinitely.
+	</p>
+	<p>We were able to get rid of the orphaned lock with the nuclear option (fast restrt the DB).</p>
+	<p>Fotunately, the bug has been patched in newer versions of the extension.</p>
 
-
-<DropDown title='Real world example'>
 	<p>
-		This type of error is legitimate crisis and the customers I work with have summoned me at odd hours to diagnose it. Usually, I run the above tests, kill the offending query, and then go back to sleep. 
+		Another <em>fun</em> situation I encountered that took half a day to debug was around a custom
+		advisory lock that was left in an <CodeHighlight>idle-in-transaction</CodeHighlight> state due to
+		an edge case in an app's logic.
 	</p>
 	<p>
-		In most cases, a developer just issued a <CodeHighlight>DROP/ALTER/CREATE</CodeHighlight> command that gut stuck behind a very slow transaction or was left in an <CodeHighlight>idle-in-transaction</CodeHighlight> state by a tired developer.
-	</p>
-	<p>
-		These issues can be prevented by using a migration linter or just using the <CodeHighlight>lock_timeout</CodeHighlight> setting.
-	<p>
-		One novel case I recall had to do with a bug in the <CodeHighlight>PGGroonga</CodeHighlight> extension. It used a custom implementation of locks to manage an internal index. There was an edge case that caused the lock to be orphaned during periods of severe memory strain, causing all writes against the index to pend indefinitely.
-	</p>
-	<p>
-		We were able to get rid of the orphaned lock with the nuclear option (fast restrt the DB). 
-	</p>
-	<p>
-		Fotunately, the bug has been patched in newer versions of the extension.
-	</p>
-
-	<p> 
-		Another <em>fun</em> situation I encountered that took half a day to debug was around a custom advisory lock that was left in an <CodeHighlight>idle-in-transaction</CodeHighlight> state due to an edge case in an app's logic. 
-	</p>
-	<p>
-		It didn't actually take a table offline, but rather crippled the database as a whole. Confessionally, I wasn't able to find out why it had such a negative impact. My speculative explanation at the time was that it interfered heavily with the vacuum and thus statistic refreshing. It didn't cause a wrap-around failure (that would've made more sense). What we noticed is that the longer the lock was orphaned, the query planner started defaulting to more problematic and CPU saturating execution strategies. 
+		It didn't actually take a table offline, but rather crippled the database as a whole.
+		Confessionally, I wasn't able to find out why it had such a negative impact. My speculative
+		explanation at the time was that it interfered heavily with the vacuum and thus statistic
+		refreshing. It didn't cause a wrap-around failure (that would've made more sense). What we
+		noticed is that the longer the lock was orphaned, the query planner started defaulting to more
+		problematic and CPU saturating execution strategies.
 	</p>
 </DropDown>
