@@ -456,10 +456,10 @@ process 46449 still waiting for "lock_type" on transaction 87656107 after 1000.0
 								url="https://github.com/ankane/pghero"
 								demoUrl="https://pghero.dokkuapp.com/"
 								visibility="None"
-								visibilityNotes="Provides no information over locks"
+								visibilityNotes="Needs further review"
 								setup="Trivial to set up. Download, deploy, connect to your Postgres instance"
 								warnSetup={false}
-								score="3"
+								score="N/A"
 							/>
 
 							<ReviewRow

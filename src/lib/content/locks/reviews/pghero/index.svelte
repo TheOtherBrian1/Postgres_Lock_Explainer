@@ -11,7 +11,7 @@
 		<h4
 			class="mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
 		>
-			Review 7: PGHero (3/10)
+			Review 7: PGHero (needs further review)
 		</h4>
 		<!-- Tab Headers -->
 		<div class="flex border-b border-stone-200 bg-stone-50">

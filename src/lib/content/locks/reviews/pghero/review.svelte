@@ -4,8 +4,9 @@
 </script>
 
 <p class="p">
-	<strong>TL;DR</strong> Simple interface, delightfully easy to use and deploy, sadly, no support for
-	lock monitoring.
+	<strong>TL;DR</strong> Simple interface, delightfully easy to use and deploy<del
+		>, sadly, no support for lock monitoring.</del
+	>
 </p>
 
 <p class="p">
@@ -18,6 +19,9 @@
 	self-hosted instances. Even NetData had a bit more friction than PGHero.
 </p>
 <p class="p">
-	Sadly, it offers zero support for lock monitoring, so I'm going to have to give it a low ranking.
-	I'm sorry PGHero! I hope you continue to improve.
+	<del
+		>Sadly, it offers zero support for lock monitoring, so I'm going to have to give it a low
+		ranking. I'm sorry PGHero! I hope you continue to improve.</del
+	>
+	I will have to repeat my review for PGHero based on new information I found about its configurations.
 </p>
