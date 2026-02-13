@@ -2,7 +2,7 @@
 	const { title, subtitle } = $props<{ title: string; subtitle: string }>();
 </script>
 
-<div class="mx-auto mb-12 max-w-5xl px-6 pt-14 text-center">
+<div class="mx-auto mb-12 max-w-5xl px-6 pt-16 text-center md:pt-20">
 	<h1 class="mb-8 font-serif text-3xl font-bold tracking-tight text-stone-950 md:text-6xl">
 		{title}
 	</h1>
