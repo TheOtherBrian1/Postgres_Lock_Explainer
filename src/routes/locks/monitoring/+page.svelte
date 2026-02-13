@@ -98,7 +98,7 @@ WHERE
 
 		</CodeBlock>
 		<p>
-			Unfortunately, to find out what queroes are blocking, one needs to use a special function
+			Unfortunately, to find out what queries are blocking, one needs to use a special function
 			called <a
 				href="https://www.postgresql.org/docs/18/functions-info.html#:~:text=the%20current%20session.-,pg_blocking_pids,-(%20integer%20)%20%E2%86%92"
 				class="a"
@@ -112,7 +112,7 @@ SELECT pg_blocking_pids(pid_of_blocked_process);
 		</CodeBlock>
 
 		<p>
-			It returns the process of the blocker, which you can then use with <CodeHighlight
+			It returns the process of the blockers, which you can then use with <CodeHighlight
 				>pg_stat_activity</CodeHighlight
 			> and <CodeHighlight>pg_locks</CodeHighlight> again to find out what query it is currently issuing.
 		</p>
@@ -137,8 +137,8 @@ SELECT pg_blocking_pids(pid_of_blocked_process);
 		</p>
 
 		<p>
-			Datadog and PgAnalyze also have lock tree queries. I was able to capture the queries and I'm
-			including them below if anyone is curious:
+			Datadog and PgAnalyze monitor lock trees. I was able to capture some of the queries they use
+			and I'm including them below for the curious:
 		</p>
 		<DropDown title="Datadog and PGAnalyze queries">
 			<h4>Datadog query</h4>
