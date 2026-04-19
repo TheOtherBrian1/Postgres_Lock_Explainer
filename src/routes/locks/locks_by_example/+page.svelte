@@ -216,8 +216,8 @@ INSERT INTO throwaway_unique (id) VALUES (1), (2), (3);
 					<CodeBlock label='session 1'>
 BEGIN;
 	UPDATE throwaway_unique
-	SET id = 3
-	WHERE id = 4;
+	SET id = 4
+	WHERE id = 1;
 	-- do not run COMMIT/ROLLBACK
 				</CodeBlock>
 				</div>
@@ -228,8 +228,8 @@ BEGIN;
 					<!-- prettier-ignore  -->
 					<CodeBlock label='session 2'>
 	UPDATE throwaway_unique
-	SET id = 2
-	WHERE id = 5;
+	SET id = 5
+	WHERE id = 2;
 				</CodeBlock>
 				</div>
 			{/snippet}
@@ -242,8 +242,8 @@ BEGIN;
 					<!-- prettier-ignore  -->
 					<CodeBlock label='session 2'>
 	UPDATE throwaway_unique
-	SET id = 3
-	WHERE id = 4;
+	SET id = 4
+	WHERE id = 3;
 				</CodeBlock>
 				</div>
 			{/snippet}
