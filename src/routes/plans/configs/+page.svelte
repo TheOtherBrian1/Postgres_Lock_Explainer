@@ -246,9 +246,8 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 				Threshold requirements
 			</h4>
 			<p>
-				Because certain operations have a notable overhead, Postgres will only consider them if the
-				overall query reviews enough data to be worth it. The below settings determine the
-				threshold.
+				Because certain operations have a notable overhead, Postgres requires threshold limits to be
+				met before considering them:
 			</p>
 
 			<ul class="mb-10 ml-4 list-disc space-y-2">
@@ -266,18 +265,17 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 				<li class="pl-4">
 					<strong class="mb-1 block text-stone-900"> Just In Time thresholds </strong>
 					<p>
-						Postgres can be compiled with a Just-in-Time compiler, which can convert SQL
-						operators/functions into native machine code. The native code can be parsed more easily
-						by CPUs. This speeds up a query's execution at the expensive of planning time (and
-						memory).
+						Postgres can be compiled with a Just-in-Time compiler, which converts SQL operators into
+						native machine code that can be executed seamlessly by CPUs. It speeds up a query's
+						execution at the expense of planning time (and memory).
 					</p>
 					<p>
 						When JIT is enabled, three values determine whether it will be utilized: <CodeHighlight
 							>jit_above_cost</CodeHighlight
 						>, <CodeHighlight>jit_inline_above_cost</CodeHighlight>, <CodeHighlight
 							>jit_optimize_above_cost</CodeHighlight
-						>. I included these values for thoroughness, but it extends beyond the scope of normal
-						operations. If you want to know more, you can read the
+						>. I included these values for thoroughness, but it extends beyond the scope of this
+						site. If you want to know more, you can read the
 						<a class="a" href="https://www.postgresql.org/docs/current/jit.html">Postgres docs</a>
 					</p>
 				</li>
