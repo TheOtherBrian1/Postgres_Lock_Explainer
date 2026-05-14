@@ -1,163 +1,3 @@
-<!-- <script lang="ts">
-	import Tool from '$lib/assets/Tool.gif';
-	import SectionHeader from '$lib/components/section_header.svelte';
-	import NumberedList from '$lib/components/lists/numbered_list.svelte';
-	import UnorderedList from '$lib/components/lists/unordered_list.svelte';
-
-	const sections = [
-		{
-			link: '/locks/concept',
-			title: 'Concept',
-			blurb:
-				'Basic concepts of locks and how they work in Postgres. I tried to make it more digestible with animations.'
-		},
-		{
-			link: '/locks/locks_by_example',
-			title: 'Locks By Example',
-			blurb: 'Outlines table locks and provides a few demoes one can run to see them in action.'
-		},
-		{
-			link: '/locks/lock_tool',
-			title: 'Lock Blocking Graph',
-			blurb: 'Interactive tool that shows what SQL operations lock out each other.',
-			img: {
-				src: Tool,
-				alt: 'Lock Blocking Graph'
-			}
-		},
-		{
-			link: '/locks/troubleshooting',
-			title: 'Troubleshooting',
-			blurb: 'Lock problems and how to identify and resolve them.'
-		},
-		{
-			link: '/locks/monitoring',
-			title: 'Monitoring',
-			blurb: 'Reviews of popular monitoring tools, as well as some homegrown solutions.'
-		}
-	];
-</script>
-
-<article
-	class="mx-auto mb-10 max-w-[1000px] rounded-2xl border border-stone-100 bg-white/95 p-6 font-sans leading-relaxed text-stone-600 shadow-sm selection:bg-[#FF3E00] selection:text-white md:p-12"
->
-	<section class="explainer_section mt-5">
-		<SectionHeader>About Me</SectionHeader>
-
-		<p>
-			I'm <a class="a" href="https://github.com/TheOtherBrian1">@TheOtherBrian1</a>, a Customer
-			Reliability Engineer focused on Postgres management and observability.
-		</p>
-
-		<p>
-			I previously built <a class="a" href="https://postgreslocksexplained.com/"
-				>Postgres Locks Explained</a
-			>. This site expands that work to cover the query planner.
-		</p>
-
-		<p>
-			Databases are built to process large amounts of data efficiently for many concurrent users.
-		</p>
-
-		<p>
-			Because data is always changing, there is no single retrieval strategy that works well for
-			every query.
-		</p>
-		<p>
-			The optimal way to fetch a single row from a 10 GB table is very different from querying a 0.5
-			MB table, and different again from retrieving 8 million rows from that same table.
-		</p>
-
-		<p>
-			The planner is the decision engine of Postgres. It evaluates data distribution, available
-			memory, and indexes to choose the strategy that is most likely to perform well for a given
-			query.
-		</p>
-
-		<p>
-			It is not perfect. To stay fast, it relies on estimates instead of calculating the optimal
-			plan every time. These estimates can be wrong, especially when indexes or statistics are
-			missing.
-		</p>
-
-		<p>
-			This site explains how the planner works so you can understand its utility, read execution
-			plans, spot mistakes, and guide it toward better decisions.
-		</p>
-		<p>My goal is to:</p>
-		{#snippet item1()}
-			Explain why the planner exists
-		{/snippet}
-		{#snippet item2()}
-			Show what algorithms the planner uses
-		{/snippet}
-		{#snippet item3()}
-			Provide tools to simplify plan interpretation
-		{/snippet}
-		{#snippet item4()}
-			Share real world examples that clarify how to fix bad plans
-		{/snippet}
-		<NumberedList items={[item1, item2, item3]} />
-		<p>I hope you find it insightful.</p>
-	</section>
-
-	<div class="space-y-4">
-		<h4
-			class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
-		>
-			Sections:
-		</h4>
-
-		<div class="p- grid grid-cols-1 gap-4">
-			{#each sections as { link, title, blurb, img }}
-				<a
-					href={link}
-					class=" group rounded-xl border border-stone-200 bg-stone-50 p-5 transition-all hover:border-amber-200 hover:bg-amber-50/50 hover:shadow-sm"
-				>
-					<h4
-						class="flex items-center gap-2.5 text-lg font-bold text-stone-900 underline group-hover:text-amber-800"
-					>
-						<span
-							class="h-2 w-2 shrink-0 rounded-full bg-stone-400 transition-colors group-hover:bg-amber-500"
-						></span>
-						{title}
-					</h4>
-
-					<p
-						style="text-decoration-underline: none"
-						class=" p mt-2 border-none text-sm text-stone-600 no-underline group-hover:text-stone-800"
-					>
-						{blurb}
-					</p>
-					{#if img?.src}
-						<div class="overflow-hidden rounded-lg border border-stone-200/60 bg-white shadow-sm">
-							<img
-								src={img.src}
-								alt={img.alt}
-								class="w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
-							/>
-						</div>
-					{/if}
-				</a>
-			{/each}
-		</div>
-	</div>
-	<p class="mt-4">
-		There are a few topics that I haven't gotten around to documenting yet, but I plan to add them
-		soon:
-	</p>
-	{#snippet item1()}
-		<span>Obscure lock settings</span>
-	{/snippet}
-	{#snippet item2()}
-		<span>Monitoring row level locks via the pgrowlocks extension</span>
-	{/snippet}
-	{#snippet item3()}
-		<span>The skip locked modifier</span>
-	{/snippet}
-	<UnorderedList items={[item1, item2, item3]} />
-</article> -->
-
 <script lang="ts">
 	// COMPONENTS -----------------------
 	import CodeBlock from '$lib/components/code_block.svelte';
@@ -278,16 +118,12 @@ ID,Name,Email,Password
 			you decide to just pull the entire file into RAM:
 		</p>
 		<CSVScan />
-		<p>
-			Once in memory, you parse the CSV and manually compare each line to find the one you want.
-		</p>
+		<p>Once in memory, you parse the CSV and manually compare each line to find the one you want</p>
 		<CSVScan3 />
+
 		<p>
-			You're initial test is dealing only with 3 rows, so this niave approach is adequate for your
-			app. You can check if a user exists and authenticate them.
-		</p>
-		<p>
-			As we start to add complexity, you'll see how it begins to breakdown. The first issue you'll
+			You're initial test is dealing only with 3 rows, so this niave approach works fine. As we
+			start to add complexity, you'll see how it begins to breakdown. The first issue we'll
 			encounter is around memory management.
 		</p>
 	</section>
@@ -337,9 +173,9 @@ ID,Name,Email,Password
 			will become foundational to the planner's logic system.
 		</p>
 		<p>
-			They are a stable unit of overhead that we can use to compare algorithmic retrieval
-			effeciency. For example, if one algorithm can access the needed data by scanning just 5 pages,
-			while another has to examine 5 million, the first one is clearly the better choice.
+			They are a stable unit of overhead that we can use to compare retrieval strategies. For
+			example, if one algorithm can access the needed data by scanning just 5 pages, while another
+			has to examine 5 million, the first one is clearly the better choice.
 		</p>
 	</section>
 	<section class="explainer_section">
@@ -424,8 +260,8 @@ ID,Name,Email,Password
 			the right one for your data and access requirements.
 		</p>
 		<p>
-			The main takeaway, though, it that by adding a complimentary data structure, the program can
-			be more selective about the pages it pulls into memory and scans.
+			The main takeaway, though, it that by adding a complimentary data structure, an index, the
+			program can be more selective about the pages it pulls into memory and scans.
 		</p>
 		<p>
 			There's just one problem: how does the program know when to use one index over another or
@@ -466,11 +302,11 @@ WHERE name = 'IAM'
 if (filter references email)
 	... use index
 else 
-	... do not use index
+	... don't use index
 		</CodeBlock>
 		<p>
-			You go realize that some index types may store a duplicate copy of a column's data. In those
-			cases, you can read directly from it without touching the main CSV file.
+			You go realize, though, that for indexes that store a copy of a column's data, you can read
+			directly from it without touching the main CSV file.
 		</p>
 		<!-- prettier-ignore  -->
 		<CodeBlock label='filter on email'>
@@ -571,23 +407,21 @@ FROM balance.csv
 WHERE balance &lt; 500;
 		</CodeBlock>
 		<p>
-			Your planner's logic breaks. It ops to check the index, let's assume its 10,000 pages in size
-			(80MB), but your app still needs to get the ID data from the main file. So, it takes the
+			Your planner's logic breaks. It ops to check the index, let's assume its 1,000 pages in size
+			(8MB), but your app still needs to get the ID data from the main file. So, it takes the
 			metadata in the index to cross check the relevant pages from <CodeHighlight
 				>balance.csv</CodeHighlight
 			>, too.
 		</p>
 		<p>
-			Because nearly every value is below 500, the query reviewing 10,000 pages from the index, but
-			on top of it, it is also cross-referencing every single page from the csv. Let's assume the
-			CSV was 50,000 pages (400MB). So, the operation looked at 480MB of pages altogether. It
-			would've been better if it just didn't use the index at all and got all the data from the CSV.
+			Because nearly every value is below 500, the query reviewing 1,000 pages from the index, but
+			on top of it, it is also cross-referencing every single page from the main csv. It would've
+			been better if it just didn't use the index at all.
 		</p>
 		<p>
-			Sadly, index scans that cross-reference the main table are counterproductive when searching
-			for over-represented values. In those cases, you will check the index, but you will still then
-			have to fetch a good bulk of pages from the main table anyways. You'll need a way to account
-			for the data distribution problem.
+			Indexes can be counterproductive when searching for over-represented values. In those cases,
+			you will check the index, but you will still then have to fetch a good bulk of pages from the
+			main table anyways. You'll need a way to account for the data distribution problem.
 		</p>
 		<h4
 			class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
@@ -621,7 +455,8 @@ else
 		</p>
 		<p>
 			You'll find the 100 most common values and keep them in a special reference file that is very
-			small, let's say just a page (8kB) in size.
+			small. You'll also take note of their distribution and give a uniqueness score to the table
+			overall.
 		</p>
 		<p>
 			Then, whenever a query is made, you'll check to see if the filter references one of the common
@@ -629,22 +464,8 @@ else
 			whether its still worth using the index or not.
 		</p>
 		<p>
-			For instance, if you apply a filter on the most common value (let's say it shows up 50% of the
-			time)
-		</p>
-		<!-- prettier-ignore  -->
-		<CodeBlock label='add index only scan'>
-SELECT 
-	* 
-FROM some_table
-WHERE some_col = "MOST_COMMON_VALUE";
-		</CodeBlock>
-		<p>Then you'll know that an index is probably not sensible.</p>
-		<p>Let's say the 100th most common value only shows up 8% of the time.</p>
-		<p>
-			If the value isn't common, enough to be in the list, then it's statistically, it probably
-			represents under 8% of the table. It is unique enough to just use an index without concerning
-			over the data distribution issue.
+			If the value isn't common, enough to be in the list, then it's probably unique enough to just
+			use the index anyways.
 		</p>
 		<p>
 			You start to notice that you can actually approximate how many pages you'll need pretty well
@@ -719,13 +540,13 @@ WHERE user.name = 'John Wick';
 		<SectionHeader>How the planner really works</SectionHeader>
 		<p>
 			Postgres's actual planner is more complex than the pseudo system devised for this example. It
-			can decide between tens of algorithms to manage sorts, data retrieval, joins, etc. and also
-			has a cost system that takes into account more than just the page size of a table.
+			can decide between 21 algorithms to manage sorts, data retrieval, joins, etc. and also has a
+			cost system that takes into account more than just the page size of a table.
 		</p>
 		<p>
 			Yet, it stll fufills the same purpose outlined for the pseudo planner. It just has more
-			variety of cases it needs to track. In the next sections, we'll discuss the algorithms, then
-			the cost system, plan interpretation, and troubleshooting.
+			variety of cases it needs to track. In the next sections, we'll discuss the 21 algorithms,
+			then the cost system, plan interpretation, and troubleshooting.
 		</p>
 	</section>
 </article>

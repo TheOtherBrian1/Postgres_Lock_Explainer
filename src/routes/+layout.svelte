@@ -9,30 +9,34 @@
 
 	let { children } = $props();
 	const endpoints = [
+		// {
+		// 	path: '/',
+		// 	name: 'Intro'
+		// },
 		{
 			path: '/',
-			name: 'About'
-		},
-		{
-			path: '/locks/concept',
 			name: 'Concept'
 		},
 		{
-			path: '/locks/locks_by_example',
-			name: 'Locks by Example'
+			path: '/plans/algorithms_by_example',
+			name: 'Algos by Example'
 		},
 		{
-			path: '/locks/lock_tool',
-			name: 'Lock Blocking Graph'
+			path: '/plans/configs',
+			name: 'Settings and Statistics'
 		},
 		{
-			path: '/locks/troubleshooting',
-			name: 'Troubleshooting'
+			path: '/plans/troubleshooting',
+			name: 'Troubleshooting and Management'
 		},
 		{
-			path: '/locks/monitoring',
-			name: 'Monitoring'
+			path: '/plans/plan_interpreter',
+			name: 'Plan Interpreter'
 		}
+		// {
+		// 	path: '/plans/monitoring',
+		// 	name: 'Monitoring'
+		// }
 	];
 </script>
 
@@ -93,7 +97,10 @@
 		>
 			<img src={GithubWhite} alt="github star link" class="mt-1 mb-7 ml-6 h-6 w-6" />
 		</a>
-		<Header title={'Postgres Locks Explained'} subtitle={'From novice to expert'} />
+		<Header
+			title={'Postgres Planner Explained'}
+			subtitle={'Everything worth knowing - simplified'}
+		/>
 
 		<div
 			class="mx-auto mb-12 hidden max-w-5xl justify-center gap-12 border-b border-stone-200 px-6 md:flex"
