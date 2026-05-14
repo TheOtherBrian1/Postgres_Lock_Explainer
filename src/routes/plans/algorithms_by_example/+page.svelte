@@ -32,9 +32,9 @@
 	<section class="explainer_section">
 		<SectionHeader>Algorithms available to the planner</SectionHeader>
 		<p>
-			The planner can return up to 57 different algorithms (plus a few more if we include
-			modifiers), to fetch, alter, and sort data. This section outlines them, so you can better
-			interpret the query plans brought up in the following sections.
+			The planner can reference up to 60 different algorithms explicitly (plus a few more if we
+			include modifiers), to fetch, alter, and sort data. This section outlines them, so you can
+			better interpret the query plans brought up in the following sections.
 		</p>
 	</section>
 

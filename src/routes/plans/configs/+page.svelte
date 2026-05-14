@@ -28,9 +28,9 @@
 	<Quote>
 		<strong>NOTE:</strong>
 		<p>
-			I tried to be as thorough and accurate as possible, and, perhaps unjustified, believe what I
-			am presenting to be the most comprehensive documentation (not tooling) on the Postgres
-			planner.
+			I tried to be as thorough and accurate as possible, and, perhaps unjustified, believe this
+			page to be one of the most comprehensive documents (not tools) on the Postgres planner's logic
+			system.
 		</p>
 		<p>
 			The sad reality is that this guide is incomplete. I know there must be more I do not know .
@@ -68,8 +68,8 @@
 		<SectionHeader>The planner configs</SectionHeader>
 
 		<Quote>
-			NOTE: it is fairly rare to adjust these settings casually. If the setting should be changed in
-			most situations, I will make that obvious.
+			<strong>NOTE</strong>: it is rare to adjust these settings casually. If the setting should be
+			changed in most situations, I will make that obvious.
 		</Quote>
 		<div
 			class="mt-6 mb-10 rounded-2xl border border-stone-100 bg-white p-6 font-sans text-stone-600 shadow-sm md:p-8"
@@ -94,6 +94,7 @@
 				It assigns a cost to the data it looks over. For instance, looking over a page costs 1 PG
 				dollar. Meanwhile, looking over a table tuple costs 0.01 PG dollars.
 			</p>
+			<p>A plan that costs more is less likely to be pursued.</p>
 			<p>
 				The values and units are arbitary. The maintainers needed an abstract, generalizable system
 				to apply across all hardware types and decided this approach was good enough. Sometimes,
@@ -101,16 +102,6 @@
 				encourage the planner to take advantage of your computing advantages.
 			</p>
 			<p>Here are all the cost settings:</p>
-			<p>
-				A barebones installation of Postgres will expose at least 350 settings. They handle
-				everything: SSL configs, memory optimization, logging, languages... It's overwhelming and
-				very few people (not even Postgres's maintainers) have complete perspective on what they're
-				for.
-			</p>
-			<p>
-				My goal is to whittle down that noise, by explaining all the settings that control the
-				planner.
-			</p>
 
 			<ul class="mb-10 ml-4 list-disc space-y-2">
 				<li class="pl-4">
@@ -827,7 +818,7 @@ WHERE proname = 'function_name';----change to func name
 		</CodeBlock>
 		<p>
 			<CodeHighlight>IMMUTABLE</CodeHighlight> functions and <CodeHighlight>STABLE</CodeHighlight> functions
-			can be used with indexes.
+			can be used with index scans.
 		</p>
 		<!-- prettier-ignore  -->
 		<CodeBlock>
@@ -837,14 +828,14 @@ WHERE
 		</CodeBlock>
 
 		<p>
-			<CodeHighlight>VOLATILE</CodeHighlight> functions cannot be used with indexes because the planner
-			does not know if the value produced will be searchable within an index range.
+			<CodeHighlight>VOLATILE</CodeHighlight> functions will not be used with index scans because the
+			planner cannot determine if data distribution is favorable ahead of time.
 		</p>
 		<!-- prettier-ignore  -->
 		<CodeBlock>
 SELECT * FROM some_table
 WHERE 
-	RANDOM() &lt; .5; ----- index incompatible
+	RANDOM() = some_col; ----- index incompatible
 		</CodeBlock>
 		<p>
 			By default, all user defined functions are <CodeHighlight>VOLATILE</CodeHighlight> unless explicitly
@@ -860,21 +851,22 @@ ALTER FUNCTION "func_name"(int) volatile;
 ALTER FUNCTION "func_name"(int, text) stable; 
 		</CodeBlock>
 		<p>
-			It is possible to coerce Postgres to treat an immuatable as a constant by wrapping by calling
-			it in a subquery:
+			It is possible to coerce Postgres to treat a volatile function as a constant calling it in a
+			subquery:
 		</p>
 		<!-- prettier-ignore  -->
 		<CodeBlock>
--- The RANDOM() will be called once and then cached. Index compatible
-WHERE (SELECT RANDOM()) &lt; .5;
-
-
 -- The RANDOM() will be called for every returned row
 WHERE RANDOM() &lt; .5;
+
+-- The RANDOM() will be called once and then cached. Index compatible
+WHERE (SELECT RANDOM()) &lt; .5;
 		</CodeBlock>
 		<p>
-			This tells the planner to use the query as an InitPlan node. Make sure you really only want
-			the function to be called once when doing this.
+			This tells the planner to use the query as an InitPlan node (cached SubPlan). Caching can
+			really improve performance, not just be cause of better access to indexes, but also because
+			the function doesn't need to be called as much. Just make sure it's the desired behavior
+			before you incorporate it.
 		</p>
 
 		<h4
@@ -884,7 +876,7 @@ WHERE RANDOM() &lt; .5;
 		</h4>
 		<p>
 			When using Row Level Security or <CodeHighlight>security_barrier</CodeHighlight> views, Postgres
-			must prevent certain database roles from seeing values that do not satisfy the security conditions.
+			must prevent targetted database roles from seeing rows that fail the security conditions.
 		</p>
 		<p>
 			Some operations/functions, though, expose values in error messages. For instance, if you try
@@ -892,10 +884,10 @@ WHERE RANDOM() &lt; .5;
 			value.
 		</p>
 		<!-- prettier-ignore  -->
-		<CodeHighlight>
+		<CodeBlock>
 -- ERROR: invalid input syntax for type integer: "apple"
 SELECT 'apple'::INT
-		</CodeHighlight>
+		</CodeBlock>
 
 		<p>
 			Operators whose errors do not expose values nor modify data are <CodeHighlight
@@ -907,18 +899,17 @@ SELECT 'apple'::INT
 			filters from Row Level Security policies have been satisfied.
 		</p>
 		<p>
-			For example, a <CodeHighlight>pg_trgm</CodeHighlight> GIN index on a <CodeHighlight
-				>LIKE</CodeHighlight
-			> condition might narrow the search down to just a handful of table pages.
+			A <CodeHighlight>pg_trgm</CodeHighlight> GIN index on a <CodeHighlight>LIKE</CodeHighlight> condition
+			might narrow the search down to just a handful of table pages.
 		</p>
 		<!-- prettier-ignore  -->
-		<CodeHighlight>
+		<CodeBlock>
 -- define index
 CREATE INDEX ON some_table USING GIN (name gin_trgm_ops);
 
 -- LIKE filter that can be used with index
 WHERE name LIKE 'Brian';
-		</CodeHighlight>
+		</CodeBlock>
 		<p>
 			However, <CodeHighlight>LIKE</CodeHighlight> operators are marked as <CodeHighlight
 				>NOT LEAKPROOF</CodeHighlight
@@ -930,9 +921,10 @@ WHERE name LIKE 'Brian';
 			processing upfront and result in worse performance.
 		</p>
 		<p>
-			Unfortunately, this is just a tradeoff that comes with security. If you are a superuser and
-			using RLS throughout your database, you may want to redefine your custom database functions to
-			be <CodeHighlight>LEAKPROOF</CodeHighlight> if you are confident they will not expose data.
+			Unfortunately, this is just a tradeoff that comes with security. If you have superuser access
+			and using RLS throughout your database, you may want to redefine your custom database
+			functions to be <CodeHighlight>LEAKPROOF</CodeHighlight> if you are believe they will not expose
+			data.
 		</p>
 		<CodeBlock>ALTER FUNCTION some_func LEAKPROOF;</CodeBlock>
 		<p>

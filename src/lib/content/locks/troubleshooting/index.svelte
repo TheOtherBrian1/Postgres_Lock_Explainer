@@ -18,9 +18,8 @@
 			critical functionality grinds to a halt.
 		</p>
 		<p class="p">
-			I look at thousands of production databases a year. In my
-			experience, lock bottlenecks are rare, certainly less so than under-optimized queries, poor
-			connection management, or bloat.
+			I look at thousands of production databases a year. In my experience, lock bottlenecks are
+			rare, certainly less so than under-optimized queries, poor connection management, or bloat.
 		</p>
 		<p class="p">
 			It's their relative obscurity that makes them so pernicious: when they shift from helpful to
