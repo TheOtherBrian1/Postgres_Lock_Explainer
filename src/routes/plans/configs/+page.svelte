@@ -117,8 +117,8 @@
 						determine the overhead of using an index to find relevant pages in a table.
 					</p>
 					<p>
-						For rotating hard drives, fetching data randomly can impose a large penalty because the
-						read head has to jump large distances to get the value:
+						For rotating hard drives, fetching data randomly takes longer because of the extra
+						physical movement:
 					</p>
 					<figure class="pb-4">
 						<img class="m-auto w-auto rounded-sm shadow-sm" src={hardDrive} alt="blackhole" />
