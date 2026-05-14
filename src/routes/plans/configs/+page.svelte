@@ -291,12 +291,12 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 				Genetic Query Optimization
 			</h4>
 			<p>
-				Postgres normally tries to exhaustively evaluate every possible execution plan before
-				choosing the best one. However, as queries reference more tables (or table-like structures),
-				the number of possible plans grows rapidly, and planning itself can become expensive. Once
-				that complexity crosses a threshold (references 12+ table-like objects), Postgres switches
-				to <CodeHighlight>Genetic Query Optimization (GEPO)</CodeHighlight>. It simulates a battle
-				royale, survival of the fittest, style challenge to eliminate bad plans.
+				Postgres tries to exhaustively evaluate all execution plans. However, as queries reference
+				more tables (or table-like structures), the number of plans grows exponentially. Once that
+				complexity crosses a threshold (references 12+ table-like objects), Postgres switches to <CodeHighlight
+					>Genetic Query Optimization (GEPO)</CodeHighlight
+				>. It simulates a battle royale, survival of the fittest, style challenge to eliminate bad
+				plans.
 			</p>
 			<p>
 				It's a probablistic model, so it can produce bad outputs, but generally, it produces good
@@ -321,9 +321,9 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 				<li class="pl-4">
 					<strong class="mb-1 block text-stone-900"> geqo_effort </strong>
 					<p>
-						A value that determines how comprehensive GEQO will be when comparing plans. The values
-						range from 1 to 10 (default 5). Larger values will increase the odds of choosing a good
-						plan, but will take longer to compute.
+						Determines how comprehensive GEQO will be when comparing plans. The values range from 1
+						to 10 (default 5). Larger values will increase the odds of choosing a good plan, but
+						will take longer to compute.
 					</p>
 				</li>
 				<li class="pl-4">
@@ -332,23 +332,14 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 						Determines the amount of competing individuals used by the genetic algorithm. By
 						default, it is based on the <CodeHighlight>geqo_effort</CodeHighlight> and the number of <CodeHighlight
 							>FROM</CodeHighlight
-						> compatible objects. When hard-coded values between 100 and 1,000 are good ranges.
+						> compatible objects. When hard-coded, values between 100 and 1,000 are good ranges.
 					</p>
 				</li>
 				<li class="pl-4">
 					<strong class="mb-1 block text-stone-900"> geqo_generations </strong>
 					<p>
 						Determines the amount of evolution stages the algorithm will try. By default, it is
-						based on the <CodeHighlight>geqo_pool_size</CodeHighlight>. Generally optimal values are
-						based around the pool size.
-					</p>
-				</li>
-				<li class="pl-4">
-					<strong class="mb-1 block text-stone-900"> geqo_generations </strong>
-					<p>
-						Determines the amount of evolution stages the algorithm will try. By default, it is
-						based on the <CodeHighlight>geqo_pool_size</CodeHighlight>. Generally optimal values are
-						based around the pool size.
+						based on the <CodeHighlight>geqo_pool_size</CodeHighlight>, which is often ideal.
 					</p>
 				</li>
 				<li class="pl-4">
@@ -410,8 +401,8 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 				index can apply.
 			</p>
 			<p>
-				Once the candidate indexes are determined, Postgres needs to reference system statistics to
-				determine whether the overhead of an index is sensible.
+				Once the candidate indexes are found, Postgres needs to reference system statistics to
+				estimate if the overhead of an index is tolerable.
 			</p>
 
 			<h4
@@ -438,8 +429,8 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 					<p>
 						If only part of the table is scanned, Postgres estimates the total row count by
 						measuring the size of the rows it sampled, comparing that against the table's file size
-						on disk, and scaling the count to best match the full table size. Since row size can
-						vary, this estimate is useful but not exact.
+						on disk, and scaling the count to best match the full table. Since row size can vary,
+						this estimate is useful but not exact.
 					</p>
 				</li>
 				<li class="pl-4">
@@ -471,11 +462,10 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 					</p>
 					<p>
 						Postgres will refer to an internal structure called a visibility map during execution to
-						see what pages must still be fetched from the table. The <CodeHighlight
+						see what still be fetched from the table. The <CodeHighlight
 							>relallvisible</CodeHighlight
 						> value shows how many pages would need to be checked. If the ratio of compromised pages to
-						all pages is relatively high, Postgres may consider an index-only-scan expensive when taking
-						into account the overhead of still checking table pages.
+						all pages is relatively high, Postgres may consider an index-only-scan unworthy.
 					</p>
 				</li>
 			</ul>
@@ -492,29 +482,26 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 				whether an index is optimal or not.
 			</p>
 			<p>
-				However, the table itself is not formatted for human readability, but rather to be quickly
-				accessed by the queries. Postgres offers a <CodeHighlight>VIEW</CodeHighlight>
+				The table itself is not formatted for human readability, but rather to be quickly accessed
+				by queries. Postgres offers a <CodeHighlight>VIEW</CodeHighlight>
 				<a class="a" href="https://www.postgresql.org/docs/current/view-pg-stats.html">pg_stats</a> that
 				contains the same information, but is reformatted for maintainers. For better readability, I am
 				going to refer to its values instead.
 			</p>
 			<p>
-				Postgres collects distribution data for every column by taking a random sample of rows from
-				the table. Specifically, it will collect the <CodeHighlight
-					>default_statistics_target</CodeHighlight
-				> setting worth of rows (100 by default) times a constant value <CodeHighlight
-					>300</CodeHighlight
-				>.
+				Postgres collects distribution data by taking a random sample of rows. Specifically, it will
+				collect the <CodeHighlight>default_statistics_target</CodeHighlight> setting worth of rows (100
+				by default) times a constant value <CodeHighlight>300</CodeHighlight>.
 			</p>
 			<p>
-				That means no matter the table size, by default, Postgres will sample 30,000 rows. As for
-				why this value, it's based on insight from a 1998 paper:
+				That means no matter the table size, by default, Postgres will sample 30,000 rows per table.
+				As for why this value, it's based on insight from a 1998 paper:
 				<a
 					class="a"
 					href="https://sigmodrecord.org/publications/sigmodRecord/9806/pdfs/276305.276343.pdf"
 					>Random sampling for histogram construction: how much is enough?</a
-				>. The conclusion was that table size is relatively negligible compared to size of the
-				histogram being sampled.
+				>. The conclusion was that table size is relatively negligible compared to size of overall
+				values being tracked (100).
 			</p>
 			<p>To quote the Postgres maintainers:</p>
 			<Quote
@@ -540,7 +527,7 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 
 					<p>
 						The percentage of column entries that are <CodeHighlight>NULL</CodeHighlight>. 0 Means
-						there no <CodeHighlight>NULLS</CodeHighlight>, while 1 means there are only <CodeHighlight
+						there are no <CodeHighlight>NULLS</CodeHighlight>, while 1 means there are only <CodeHighlight
 							>NULLS</CodeHighlight
 						>. NULLS behave atypically within Postgres. For instance, all NULLS are unique values,
 						e.g. (NULL does not equal NULL), so tracking them allows the planner to make estimates
@@ -591,8 +578,8 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 					<strong class="mb-1 block text-stone-900">most_common_freqs</strong>
 
 					<p>
-						Corresponds to the <CodeHighlight>most_common_vals</CodeHighlight>. Shows the frequency
-						of the corresponding value.
+						Corresponds to the <CodeHighlight>most_common_vals</CodeHighlight>. Shows what
+						percentage of times they show up.
 					</p>
 				</li>
 				<li class="pl-4">
@@ -608,8 +595,8 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 
 					<p>
 						statistical correlation between physical row ordering and logical ordering. When the
-						value is closer to -1/1, it means the data is poorly correlated, so index scans should
-						be considered less expensive due to the reduction of the random access penalty.
+						value is closer to -1/1, it means the data is correlated, so index scans should be
+						considered because they are likely to hit fewer scattered pages in the main table.
 					</p>
 				</li>
 				<li class="pl-4">
@@ -690,8 +677,8 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 					</p>
 					<p>
 						For example, if <CodeHighlight>max_worker_processes</CodeHighlight> is set to 12, then if
-						two <CodeHighlight>Gather</CodeHighlight> nodes attempt to allocate 16 workers, one will be
-						stuck with only 4.
+						two <CodeHighlight>Gather</CodeHighlight> nodes attempt to allocate 16 workers, one will have
+						8, but the other will be stuck with only 4.
 					</p>
 				</li>
 			</ul>
@@ -726,7 +713,7 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 						When hashing is used internally, the hash table must fit in memory. The amount of memory
 						allowed is <CodeHighlight>maintenance_work_mem * hash_mem_multiplier</CodeHighlight>. If
 						the planner believes the amount of unique values needed to be hashed would exceed this
-						amount, it will opt for a different scan.
+						amount, it will opt for a different algorithm.
 					</p>
 				</li>
 				<li class="pl-4">
@@ -735,12 +722,17 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 						When Postgres requests pages the operating system may choose to cache a duplicate copy
 						in memory. The <CodeHighlight>effective_cache_size</CodeHighlight> represents memory that
 						the OS may be using for its own cache. The database takes into account the likelihood of fetching
-						data from disk over cache when deciding on whether an index is vialble. A higher <CodeHighlight
+						data from disk over cache when deciding on whether an index is practical. A higher <CodeHighlight
 							>effective_cache_size</CodeHighlight
 						>, encourages index usage.
 					</p>
 				</li>
 			</ul>
+			<h4
+				class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
+			>
+				IO (work in progress)
+			</h4>
 		</div>
 	</section>
 
