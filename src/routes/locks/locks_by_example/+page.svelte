@@ -180,16 +180,16 @@ SELECT * FROM throwaway;
 			<h4
 				class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
 			>
-				DEMO: SHARE locks
+				DEMO: FOR UPDATE locks
 			</h4>
 			<p>
-				<CodeHighlight>SHARE</CodeHighlight> locks are used to prevent writes while building indexes without
-				the <CodeHighlight>CONCURRENTLY</CodeHighlight> modifier. However, they're also used in another
-				atypical situation: protecting <CodeHighlight>UNIQUENESS</CodeHighlight>. If you try to
-				create two identical entries in a <CodeHighlight>UNIQUE/PRIMARY_KEY</CodeHighlight> column, the
-				first query will claim a <CodeHighlight>SHARE LOCK</CodeHighlight> for the unique value. The second
-				query will then wait for the first one to complete know if it can write with the value, too.
+				<CodeHighlight>FOR UPDATE</CodeHighlight> locks are row locks that prevent operations from <CodeHighlight>DELETING</CodeHighlight> or <CodeHighlight>UPDATING</CodeHighlight> rows that are already being modified. They also help enforce <CodeHighlight>FOREIGN KEY</CodeHighlight> and <CodeHighlight>UNIQUE</CodeHighlight> constraints. 
 			</p>
+			<p>
+This example will focus on showing how <CodeHighlight>UNIQUENESS</CodeHighlight> is preserved. You'll
+				create two identical entries in a <CodeHighlight>UNIQUE/PRIMARY_KEY</CodeHighlight> column: the
+				first query will claim a <CodeHighlight>FOR UPDATE LOCK</CodeHighlight> for the unique value. The second query will then wait for the first one to complete to determine if it can write with the value, too. 
+</p>
 			<p>To see the lock in action:</p>
 			{#snippet item18()}
 				<div class="spacy-y-2 ml-3 flex w-full flex-col">
