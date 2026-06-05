@@ -97,9 +97,8 @@ SELECT name FROM actors WHERE row_id = 1;
 			requests (<CodeHighlight>UPDATES</CodeHighlight>, <CodeHighlight>DELETES</CodeHighlight>, <CodeHighlight
 				>INSERTS</CodeHighlight
 			>...) Postgres uses a technique called
-			<code class="font-medium">Multi-View-Concurrency-Control</code> (<abbr>MVCC</abbr>). This
-			means Postgres creates different "versions" of the data so reads and writes don't get in each
-			other's way.
+			<code class="font-medium">Multi-Version-Concurrency-Control</code> (<abbr>MVCC</abbr>). This
+			means Postgres creates different "versions" of the data, so reads and writes don't get in each other's way.
 		</p>
 		<p>The way this is handled depends on the operation:</p>
 
