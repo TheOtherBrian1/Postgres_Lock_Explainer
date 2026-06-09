@@ -27,7 +27,7 @@ const tableLocks = [
 			'ACCESS EXCLUSIVE'
 		],
 		description:
-			'Prevents schema modifications and vacuums from running at the same time on a table. Without it, schema changes could conflict with each other or corrupt table statistics, and overlapping vacuums could waste resources.'
+			'Prevents schema modifications and vacuums from running at the same time on a table. Without it, schema changes could conflict with each other or interfere with table statistics, and overlapping vacuums could waste resources.'
 	},
 	{
 		lock: 'SHARE',
