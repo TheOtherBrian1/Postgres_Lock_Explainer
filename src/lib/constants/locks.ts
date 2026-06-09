@@ -38,7 +38,7 @@ const tableLocks = [
 			'EXCLUSIVE',
 			'ACCESS EXCLUSIVE'
 		],
-		description: 'Prevents data and table changes, which can impact the index build process'
+		description: 'Prevents writes and maintenance operations from interfering with the index creation process.'
 	},
 	{
 		lock: 'SHARE ROW EXCLUSIVE',
@@ -51,7 +51,7 @@ const tableLocks = [
 			'EXCLUSIVE',
 			'ACCESS EXCLUSIVE'
 		],
-		description: 'Prevents table data from being modified while triggers and foreign keys are added'
+		description: 'Prevents table data from being modified while triggers and foreign keys are added.'
 	},
 	{
 		lock: 'EXCLUSIVE',
@@ -79,7 +79,7 @@ const tableLocks = [
 			'ACCESS EXCLUSIVE'
 		],
 		description:
-			"When a table's underlying file is being replaced or its access policies are being updated, Postgres blocks all operations on that table. This prevents data loss during writes and avoids returning incomplete or inconsistent data during reads."
+			"When a table's underlying file is being replaced, or its metadata is significantly modified, Postgres blocks all operations on that table. This prevents data loss during writes and avoids returning incomplete or inconsistent data during reads."
 	}
 ];
 const rowLocks = [
