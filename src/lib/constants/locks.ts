@@ -9,7 +9,7 @@ const tableLocks = [
 		lock: 'ROW SHARE',
 		conflicts: ['EXCLUSIVE', 'ACCESS EXCLUSIVE'],
 		description:
-			'Blocks indexes, materialized views, and triggers from being built. It also stops changes to table access rules (like RLS updates) or operations that overwrite the table file.'
+			'Functionally identical to ACCESS EXCLUSIVE (SELECT), but also prevents materialized views from refreshing concurrently.'
 	},
 	{
 		lock: 'ROW EXCLUSIVE',
