@@ -3,7 +3,7 @@ const tableLocks = [
 		lock: 'ACCESS SHARE',
 		conflicts: ['ACCESS EXCLUSIVE'],
 		description:
-			"Acquired by operations that only read from a table. It ensures the operation doesn't try to read from a table whose file or access rules are being modified. Without this protection, the operation could fail (for example, if the file no longer exists) or produce corrupted results (if table or RLS rules change midway through the query)."
+			"Acquired by operations that only read from a table. It ensures the operation doesn't try to read from a table whose file or access rules are being modified. Without this protection, the operation could fail (for example, if the read tried to interact with a table while it was being DROPPED) or return inconsistent results, e.g. if table or RLS rules change midway through the query."
 	},
 	{
 		lock: 'ROW SHARE',
@@ -15,7 +15,7 @@ const tableLocks = [
 		lock: 'ROW EXCLUSIVE',
 		conflicts: ['SHARE', 'SHARE ROW EXCLUSIVE', 'EXCLUSIVE', 'ACCESS EXCLUSIVE'],
 		description:
-			'Claimed by write operations and blocks indexes and triggers from being built. Also prevents foreign key constraints from being added. Without it, write operations could try writing to index files that are in a transitory state, disrupt the initial foreign key check, or inappropriately activate a partially created trigger. It also stops changes to table access rules (like RLS updates) or operations that overwrite the table file, protecting against data loss that could occur if the system tried changing data while the file was inaccessible.'
+			'Claimed by write commands and it blocks indexes, and triggers from being built. Also prevents foreign key constraints from being added. Without it, write operations could attempt to write to index files that are in a transitory state, disrupt an initial foreign key check, or inappropriately activate a partially created trigger. It also blocks operations that change or alter the definition of the underlying table file (such as a DROP command).'
 	},
 	{
 		lock: 'SHARE UPDATE EXCLUSIVE',
@@ -27,7 +27,7 @@ const tableLocks = [
 			'ACCESS EXCLUSIVE'
 		],
 		description:
-			'Prevents schema modifications and vacuums from running at the same time on a table. Without it, schema changes could conflict with each other or interfere with table statistics, and overlapping vacuums could waste resources.'
+			'Prevents schema definition modifications and vacuum/analyzes from interrupting each other. Also used to create indexes concurrently. It still allows reads/writes.'
 	},
 	{
 		lock: 'SHARE',
@@ -38,7 +38,7 @@ const tableLocks = [
 			'EXCLUSIVE',
 			'ACCESS EXCLUSIVE'
 		],
-		description: 'Prevents writes and maintenance operations from interfering with the index creation process.'
+		description: 'Prevents writes and maintenance operations against a table, so they do not interfere with the index creation process. Notably, it does not block itself, so it is possible to build multiple indexes for a table at once.'
 	},
 	{
 		lock: 'SHARE ROW EXCLUSIVE',
@@ -51,7 +51,7 @@ const tableLocks = [
 			'EXCLUSIVE',
 			'ACCESS EXCLUSIVE'
 		],
-		description: 'Prevents table data from being modified while triggers and foreign keys are added.'
+		description: 'Prevents all writes and maintenance operations while triggers and foreign keys are added. Nearly identical to the SHARE lock, with the exception that it also blocks SHARE, too, preventing index creation commands.'
 	},
 	{
 		lock: 'EXCLUSIVE',
@@ -64,7 +64,7 @@ const tableLocks = [
 			'EXCLUSIVE',
 			'ACCESS EXCLUSIVE'
 		],
-		description: 'Allows materialized views to refresh while still allowing SELECTs'
+		description: 'Allows materialized views to refresh while still allowing SELECT'
 	},
 	{
 		lock: 'ACCESS EXCLUSIVE',
