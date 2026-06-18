@@ -3,7 +3,7 @@ const tableLocks = [
 		lock: 'ACCESS SHARE',
 		conflicts: ['ACCESS EXCLUSIVE'],
 		description:
-			"Acquired by operations that only read from a table. It ensures the operation doesn't try to read from a table whose file or access rules are being modified. Without this protection, the operation could fail (for example, if the read tried to interact with a table while it was being DROPPED) or return inconsistent results, e.g. if table or RLS rules change midway through the query."
+			"Acquired by standard SELECT queries. It ensures the operation doesn't try to read from a table whose file or access rules are being modified. Without this protection, the operation could fail (for example, if the read tried to interact with a table while it was being DROPPED) or return inconsistent results, e.g. if table or RLS rules change midway through the query."
 	},
 	{
 		lock: 'ROW SHARE',
