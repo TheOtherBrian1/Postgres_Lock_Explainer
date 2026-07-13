@@ -23,6 +23,7 @@
 	import hardDrive from '$lib/assets/hard_drive.jpg';
 	import IntersectAndExcept from '$lib/assets/except_and_intersect.png';
 	import SuperSectionHeader from '$lib/components/super_section_header.svelte';
+	import DropDown from '$lib/components/drop_down.svelte';
 </script>
 
 <article
@@ -36,6 +37,73 @@
 			include modifiers), to fetch, alter, and sort data. This section outlines them, so you can
 			better interpret the query plans brought up in the following sections.
 		</p>
+		<DropDown title="Sources and commentary">
+			<p>
+				To the best of my knowledge, there are only 3 resources outside of this documentation that
+				outline <em>most</em> explain nodes:
+			</p>
+			{#snippet item100()}
+				<strong>Bruce Momjian's series on the optimizer:</strong> Core contributor Bruce Momjian has
+				written multiple blog posts and given several talks on query plans. The two most relevant
+				ones are "<a class="a" href="https://momjian.us/main/writings/pgsql/optimizer.pdf"
+					>Explaining the Postgres Query Optimizer</a
+				>" and "<a class="a" href="https://momjian.us/main/writings/pgsql/beyond.pdf"
+					>Beyond Joins and Indexes</a
+				>"
+			{/snippet}
+			{#snippet item101()}
+				<strong>PGAnalyze:</strong> PGAnalyze is an exceptional Postgres monitoring tool and has
+				<a class="a" href="https://pganalyze.com/docs/explain/scan-nodes/sequential-scan"
+					>documentation</a
+				> outlining many nodes.
+			{/snippet}
+			{#snippet item102()}
+				<strong>PGMustard:</strong>
+				<a class="a" href="https://www.pgmustard.com/docs/explain">PGMustard's Explain Glossary</a>
+				outlines <em>most</em> node plans and is the most thorough resource for outlining all subfields.
+			{/snippet}
+			<NumberedList items={[item100, item101, item102]} />
+			<p>
+				These were foundational during my investigations. However, they all had gaps. Nothing major,
+				and certainly nothing worth desparging over. Without them, this project would not have been
+				feasible.
+			</p>
+			<p>
+				Confessionally, unlike my other site, <a
+					class="a"
+					href="https://www.postgreslocksexplained.com">postgreslocksexplained.com</a
+				>, this research started solely as an extension of a work project (which I am not entitled
+				to discuss). I needed to be beyond thorough to ensure the advice I offered was grounded. I
+				reviewed the
+				<a
+					class="a"
+					href="https://github.com/postgres/postgres/blob/031904048aa22e7c70dc8e9c170e2743f9b0f090/src/backend/commands/explain.c#L1389"
+					>explain command source code</a
+				>, which revealed a few more hidden plans. During times of desperation, I'd also review the
+				<a href="https://github.com/postgres/postgres/tree/master/src/backend/executor" class="a"
+					>source code for a specific plan type</a
+				>.
+			</p>
+			<p>
+				When I started this process, I lacked intuition for a lot of these operations. I'd like to
+				give praise to TigerData, as their <a
+					href="https://www.tigerdata.com/blog/how-postgresql-aggregation-works-and-how-it-inspired-our-hyperfunctions-design"
+					class="a">review of aggregations</a
+				> really helped me understand the internals.
+			</p>
+			<p>
+				<a
+					href="https://www.cybertec-postgresql.com/en/postgresql-indexing-index-scan-vs-bitmap-scan-vs-sequential-scan-basics/"
+					class="a">Cybertec's blog</a
+				> also was handy a few times.
+			</p>
+			<p>
+				In some cases, there really were no resources. At the time of writing, the node types aren't
+				actually in the Postgres docs. A lot of this was just trial and error, experimenting with
+				SQL, and reading the source code. Still, I cannot dismiss how foundational the above
+				resources were for me when compiling this list.
+			</p>
+		</DropDown>
 	</section>
 
 	<!-- SCANS:------------------------- -->
