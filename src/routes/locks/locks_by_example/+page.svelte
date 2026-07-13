@@ -309,7 +309,7 @@ COMMIT;
 					</p>
 					<div class="group relative mb-2 flex space-x-1 text-[10px]">
 						<span class="font-medium text-nowrap"> CLAIMS LOCK: </span>
-						<span class="max-w-[600px] overflow-hidden text-nowrap text-ellipsis">
+						<span class="max-w-[600px] text-nowrap text-ellipsis">
 							{getTableOps(lock).join(', ')}
 						</span>
 					</div>

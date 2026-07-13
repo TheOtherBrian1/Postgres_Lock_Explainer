@@ -1,6 +1,6 @@
 <script>
-	/** @type {{ items: import('svelte').Snippet[], not_p?: boolean }} */
-	let { items, not_p } = $props();
+	/** @type {{ items: import('svelte').Snippet[], not_p?: boolean, offset?: number }} */
+	let { items, not_p, offset = 0 } = $props();
 </script>
 
 <ol class="ml-2 list-none">
@@ -9,7 +9,7 @@
 			<span
 				class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ff3e00]/10 text-xs font-bold text-[#ff3e00]"
 			>
-				{index + 1}
+				{index + offset + 1}
 			</span>
 			<div class="min-w-0 flex-1">
 				{#if not_p}

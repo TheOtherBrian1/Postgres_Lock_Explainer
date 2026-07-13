@@ -14,6 +14,7 @@
 	import blackhole from '$lib/assets/blackhole.webp';
 </script>
 
+duck
 <article
 	class="mx-auto mb-10 max-w-[1000px] rounded-2xl border border-stone-100 bg-white/95 p-6 font-sans leading-relaxed text-stone-600 shadow-sm selection:bg-[#FF3E00] selection:text-white md:p-12"
 >
