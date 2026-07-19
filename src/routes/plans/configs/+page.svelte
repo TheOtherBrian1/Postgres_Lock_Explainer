@@ -37,7 +37,6 @@
 			This guide is a best effort explanation. I'm afraid that there is no living soul who has
 			complete perspective over the planner's inner workings.
 		</p>
-		<p>I doubt even Bruce Momijan, Lukas Fittl , and Stephen Frost have all the answers.</p>
 	</Quote>
 	<p>
 		Early on, we showed what problems inspired the planner, and then outlined the available

@@ -3,15 +3,14 @@
 
 	// Svelte 5 reactive table array
 	let rows = $state([
-		{ id: 1, invoice: '$100', currentVal: 100, statusA: 'idle', statusB: 'idle' },
-		{ id: 2, invoice: '$200', currentVal: 200, statusA: 'idle', statusB: 'idle' },
-		{ id: 3, invoice: '$300', currentVal: 300, statusA: 'idle', statusB: 'idle' },
-		{ id: 4, invoice: '$480,000', currentVal: 480000, statusA: 'idle', statusB: 'idle' },
-		{ id: 5, invoice: '$500', currentVal: 500, statusA: 'idle', statusB: 'idle' }
+		{ id: 1, invoice: '$100', currentVal: 100, statusA: 'idle' },
+		{ id: 2, invoice: '$200', currentVal: 200, statusA: 'idle' },
+		{ id: 3, invoice: '$300', currentVal: 300, statusA: 'idle' },
+		{ id: 4, invoice: '$400', currentVal: 400, statusA: 'idle' },
+		{ id: 5, invoice: '$500', currentVal: 500, statusA: 'idle' }
 	]);
 
 	let isReaderAActive = $state(false);
-	let isWriterBActive = $state(false);
 	let currentSum = $state(0);
 	let dynamicAddition = $state({ text: '', key: 0 });
 
@@ -19,8 +18,12 @@
 	let currentTimeoutIds = [];
 
 	onMount(() => {
+		isRunning = true;
 		triggerSimulation();
-		return () => clearAllTimeouts();
+		return () => {
+			isRunning = false;
+			clearAllTimeouts();
+		};
 	});
 
 	function delay(ms) {
@@ -38,7 +41,6 @@
 	function resetSimulationState() {
 		clearAllTimeouts();
 		isReaderAActive = false;
-		isWriterBActive = false;
 		currentSum = 0;
 		dynamicAddition = { text: '', key: Math.random() };
 
@@ -48,26 +50,30 @@
 		rows[1].currentVal = 200;
 		rows[2].invoice = '$300';
 		rows[2].currentVal = 300;
-		rows[3].invoice = '$480,000';
-		rows[3].currentVal = 480000;
+		rows[3].invoice = '$400';
+		rows[3].currentVal = 400;
 		rows[4].invoice = '$500';
 		rows[4].currentVal = 500;
 
 		rows.forEach((row) => {
 			row.statusA = 'idle';
-			row.statusB = 'idle';
 		});
 	}
 
 	async function triggerSimulation() {
-		if (isRunning) {
-			resetSimulationState();
-			await new Promise((r) => setTimeout(r, 50));
-		}
-		isRunning = true;
+		// Clear anything running and restart the persistent loop
 		resetSimulationState();
-		await runSimulation();
-		isRunning = false;
+		isRunning = true;
+
+		// Infinite loop to keep the animation going
+		while (isRunning) {
+			await runSimulation();
+			if (isRunning) {
+				// Short break between loop cycles
+				await delay(1500);
+				resetSimulationState();
+			}
+		}
 	}
 
 	async function runSimulation() {
@@ -89,59 +95,30 @@
 		dynamicAddition = { text: `+${rows[1].currentVal}`, key: Math.random() };
 		rows[1].statusA = 'idle';
 
-		// --- ROW 3 (Reader Pauses Here) ---
+		// --- ROW 3 ---
 		rows[2].statusA = 'reading';
-		await delay(800);
+		await delay(1000);
 		if (!isRunning) return;
 		currentSum += rows[2].currentVal;
 		dynamicAddition = { text: `+${rows[2].currentVal}`, key: Math.random() };
-
-		// Reader A advances to Row 4
 		rows[2].statusA = 'idle';
+
+		// --- ROW 4 ---
 		rows[3].statusA = 'reading';
-		await delay(400);
-		if (!isRunning) return;
-
-		// --- CONCURRENT OVERLAP ZONE (Row 4) ---
-		// Writer B targets Row 4 while Reader A is actively scanning it
-		isWriterBActive = true;
-		rows[3].statusB = 'writing';
-
-		// Change value to $48,000 while Reader is watching
 		await delay(1000);
 		if (!isRunning) return;
-		rows[3].invoice = '$48,000';
-		rows[3].currentVal = 48000;
-
-		// Change value to $4,800 while Reader is still watching
-		await delay(1200);
-		if (!isRunning) return;
-		rows[3].invoice = '$4,800';
-		rows[3].currentVal = 4800;
-		await delay(1000);
-		if (!isRunning) return;
-
-		// Reader A finishes scanning the intermediate $4,800 state and commits it
 		currentSum += rows[3].currentVal;
-		dynamicAddition = { text: `+4,800`, key: Math.random() };
-
-		// Reader A leaves Row 4 and steps onto Row 5
+		dynamicAddition = { text: `+${rows[3].invoice}`, key: Math.random() };
 		rows[3].statusA = 'idle';
+
+		// --- ROW 5 ---
 		rows[4].statusA = 'reading';
-
-		// Simultaneously, Writer B finalizes Row 4 down to $400
-		rows[3].invoice = '$400';
-		rows[3].currentVal = 400;
-
-		await delay(1200);
+		await delay(1000);
 		if (!isRunning) return;
 		currentSum += rows[4].currentVal;
 		dynamicAddition = { text: `+${rows[4].currentVal}`, key: Math.random() };
-
-		// Clean up final remaining states
 		rows[4].statusA = 'idle';
-		rows[3].statusB = 'idle';
-		isWriterBActive = false;
+
 		isReaderAActive = false;
 	}
 </script>
@@ -153,17 +130,9 @@
 	tabindex="0"
 	onkeydown={(e) => e.key === 'Enter' && triggerSimulation()}
 >
-	<div class="header-section">
-		<div class="panel-label">
-			Invoices List <br />
-			<span class="sub-label">(Transactional Rows)</span>
-		</div>
-
-		<div class="indicators">
-			<div class="indicator reader-a {isReaderAActive ? 'active-a' : ''}">Reader A</div>
-			<div class="indicator writer-b {isWriterBActive ? 'active-b' : ''}">Writer B</div>
-		</div>
-	</div>
+	<h5 class="mb-6 text-center text-sm font-bold tracking-widest text-stone-900 uppercase">
+		Aggregate: Add Column Data to State
+	</h5>
 
 	<div class="playground">
 		<div class="table-wrapper">
@@ -176,12 +145,7 @@
 				</thead>
 				<tbody>
 					{#each rows as row (row.id)}
-						<tr
-							class="
-								{row.statusA === 'reading' ? 'has-reader-a' : ''} 
-								{row.statusB === 'writing' ? 'has-writer-b' : ''}
-							"
-						>
+						<tr class={row.statusA === 'reading' ? 'has-reader-a' : ''}>
 							<td class="row-id">[{row.id}]</td>
 							<td class="invoice-amount">{row.invoice}</td>
 						</tr>
@@ -209,10 +173,6 @@
 				})}
 			</div>
 		</div>
-	</div>
-
-	<div class="click-hint">
-		💡 Click anywhere inside this display dashboard to start/restart the simulation
 	</div>
 </div>
 
@@ -281,11 +241,6 @@
 
 	.indicator.active-a {
 		background-color: #ea580c;
-		color: white;
-	}
-
-	.indicator.active-b {
-		background-color: #2563eb;
 		color: white;
 	}
 
@@ -455,9 +410,7 @@
 		}
 	}
 
-	/* --- VISUAL HIGHLIGHT OVERLAPS --- */
-
-	/* Reader A (Orange Inline Borders & Soft Backdrop Fill) */
+	/* Reader A Visual Highlights */
 	.has-reader-a td {
 		background-color: #fff7ed !important;
 		border-top-color: #ea580c !important;
@@ -468,18 +421,6 @@
 	}
 	.has-reader-a td:last-child {
 		border-right-color: #ea580c !important;
-	}
-
-	/* Writer B (Blue Outer Frame Outline) */
-	.has-writer-b {
-		outline: 4px solid #2563eb;
-		outline-offset: 1px;
-		border-radius: 6px;
-	}
-
-	/* Separate fallback color if Writer B sits on a row on its own */
-	tr.has-writer-b:not(.has-reader-a) td {
-		background-color: #eff6ff !important;
 	}
 
 	.click-hint {

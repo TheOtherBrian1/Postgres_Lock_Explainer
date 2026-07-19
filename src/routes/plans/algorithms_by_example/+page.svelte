@@ -33,9 +33,9 @@
 	<section class="explainer_section">
 		<SectionHeader>Algorithms available to the planner</SectionHeader>
 		<p>
-			The planner can reference up to 60 different algorithms explicitly (plus a few more if we
-			include modifiers), to fetch, alter, and sort data. This section outlines them, so you can
-			better interpret the query plans brought up in the following sections.
+			The planner can reference 60+ different algorithms explicitly (depending on how you count
+			them), to fetch, alter, and organize data. This section outlines them, so you can better
+			interpret the query plans brought up in the following sections.
 		</p>
 		<DropDown title="Sources and commentary">
 			<p>
@@ -69,23 +69,7 @@
 				feasible.
 			</p>
 			<p>
-				Confessionally, unlike my other site, <a
-					class="a"
-					href="https://www.postgreslocksexplained.com">postgreslocksexplained.com</a
-				>, this research started solely as an extension of a work project (which I am not entitled
-				to discuss). I needed to be beyond thorough to ensure the advice I offered was grounded. I
-				reviewed the
-				<a
-					class="a"
-					href="https://github.com/postgres/postgres/blob/031904048aa22e7c70dc8e9c170e2743f9b0f090/src/backend/commands/explain.c#L1389"
-					>explain command source code</a
-				>, which revealed a few more hidden plans. During times of desperation, I'd also review the
-				<a href="https://github.com/postgres/postgres/tree/master/src/backend/executor" class="a"
-					>source code for a specific plan type</a
-				>.
-			</p>
-			<p>
-				When I started this process, I lacked intuition for a lot of these operations. I'd like to
+				When I started this process, I lacked intuition for a lot of the operations. I'd like to
 				give praise to TigerData, as their <a
 					href="https://www.tigerdata.com/blog/how-postgresql-aggregation-works-and-how-it-inspired-our-hyperfunctions-design"
 					class="a">review of aggregations</a
@@ -94,14 +78,26 @@
 			<p>
 				<a
 					href="https://www.cybertec-postgresql.com/en/postgresql-indexing-index-scan-vs-bitmap-scan-vs-sequential-scan-basics/"
-					class="a">Cybertec's blog</a
-				> also was handy a few times.
+					class="a">Cybertec's</a
+				>
+				and
+				<a class="a" href="https://www.enterprisedb.com/blog/tablesample-postgresql-95"
+					>EnterpriseDB's</a
+				> blogs also were handy a few times.
 			</p>
 			<p>
 				In some cases, there really were no resources. At the time of writing, the node types aren't
 				actually in the Postgres docs. A lot of this was just trial and error, experimenting with
 				SQL, and reading the source code. Still, I cannot dismiss how foundational the above
 				resources were for me when compiling this list.
+			</p>
+			<p>
+				It didn't really make a lot of sense to me to keep the information on my site. It belongs to
+				the PG Community. I made <a
+					class="a"
+					href="https://www.postgresql.org/message-id/flat/20260719002640.860035-1-briantgbtheonly%40gmail.com#d654dddf8d1aceb54b6dc80f80344cb4"
+					>PRs</a
+				> to the docs with the desire that people will be able to rely on them going forwards.
 			</p>
 		</DropDown>
 	</section>
@@ -122,21 +118,18 @@
 			>
 				Sequential Scan
 			</h4>
-			<p>It takes all pages and manually scans them over for the relevant rows</p>
+			<p>
+				It starts from the first table page and manually reviews <strong>all rows</strong> page-by-page
+				in order.
+			</p>
 			<SeqScan />
 			<p>
-				A sequential scan will return the entire table with some exceptions. When a <CodeHighlight
-					>LIMIT</CodeHighlight
-				> condition, a sequential scan can be escaped early.
+				When a <CodeHighlight>LIMIT</CodeHighlight> condition, a sequential scan can be escaped early.
 			</p>
 			<p>
-				Likewise, if metadata, such as a uniqueness constraint, allows the executor to determine
-				that all filter satisfying values have already been accounted for, it can stop without
-				scanning the entire table.
-			</p>
-			<p>
-				Sequential scans on large tables are slow and can have a high IO overhead because of the
-				amount of data that needs to be reviewed.
+				Sequential scans are effective on small tables because of the low startup cost. On large
+				tables, they are slow and can have a high IO overhead because of the amount of data that
+				needs to be reviewed.
 			</p>
 			<h4
 				class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
@@ -145,8 +138,7 @@
 			</h4>
 			<p>
 				If all the data exists within an index, Postgres can scan over just the index pages rather
-				than referencing the main table. Though, it may also cross-check specific table pages
-				anyways if they've been recently modified to ensure consistency.
+				than referencing the main table.
 			</p>
 			<IndexOnly />
 			<p>
@@ -161,6 +153,24 @@
 			<p>
 				For these reasons, the scan is generally the fastest of the primary scans and least resource
 				heavy.
+			</p>
+			<p>
+				Earlier I wrote:
+				<Quote>
+					Postgres can scan over just the index pages rather than referencing the main table.
+				</Quote>
+				This isn't entirely true. Postgres has a concept called
+				<a
+					class="a"
+					href="https://postgreslocksexplained.com/locks/concept#:~:text=Multi%2DVersion%2DConcurrency%2DControl"
+					>Multi-Version-Concurrency-Control</a
+				>
+				(MVCC). It prevents read and write queries from blocking each other. To comply with MVCC, when
+				an index-only-scan finds a match, it has to check a special data structure called the
+				<a class="a" href="https://www.postgresql.org/docs/current/storage-vm.html"
+					>visibility map</a
+				>. If the map states that the table page was recently modified, the index scan will still
+				have to cross-check the corresponding row's table page to get MVCC information.
 			</p>
 			<h4
 				class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
@@ -240,10 +250,7 @@
 			>
 				Bitmap Index Scans
 			</h4>
-			<p>
-				Potentially relevant table pages are uncovered from an index and then added to an in-memory
-				bitmap:
-			</p>
+			<p>Relevant table pages are uncovered from an index and then added to an in-memory bitmap:</p>
 			<IndexBitmap />
 
 			<p>
@@ -278,9 +285,9 @@ WHERE
 	colB >= 500; -- has a BTREE index
 	</CodeBlock>
 			<p>
-				If multiple bitmaps are made for each index, to accommodate the filters, they can be ANDED (<CodeHighlight
+				If multiple bitmaps are made for each index, to accommodate the filters, they can be ANDed (<CodeHighlight
 					>BitmapAnd</CodeHighlight
-				>) or ORED (<CodeHighlight>BitmapOR</CodeHighlight>) together:
+				>) or ORed (<CodeHighlight>BitmapOR</CodeHighlight>) together:
 			</p>
 			<BitOr />
 			<p>Once the combined map is complete, the final phase can commence.</p>
@@ -357,10 +364,14 @@ WHERE
 			>
 				Result
 			</h4>
-			<p>Applies to statements that just returns a constant.</p>
+			<p>Applies to statements that just returns a constant or fixed calculation.</p>
 			<!-- prettier-ignore  -->
 			<CodeBlock>
+-- returns a constant
 SELECT 1;
+
+-- returns a fixed calculation
+SELECT NOW();
 			</CodeBlock>
 			<h4
 				class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
@@ -473,7 +484,10 @@ SELECT * FROM (
 				It is very fast, but seldomly used in practice. Beyond being incredibly obscure, CTIDs are
 				temporary, possibly changing when a VACUUM runs.
 			</p>
-			<p>Outside of experimentation, I have only ever used this scan for data recovery.</p>
+			<p>
+				Outside of experimentation, I have only ever used this scan meaningfully for advanced data
+				recovery.
+			</p>
 			<!-- prettier-ignore  -->
 			<CodeBlock>
 			SELECT * FROM tab1 WHERE ctid = '(0, 1)'::tid;
@@ -488,9 +502,8 @@ SELECT * FROM (
 				of rows.
 			</p>
 			<Quote>
-				I know I'm breaking the fourth wall by addressing you directly, but what is wrong with you?
 				Why, why would you be intrigued with TID scans of any type? Are you interested in Postgres?
-				Nerd! (please contribute to the site)
+				Nerd! (please offer suggestions for the site)
 			</Quote>
 			<!-- prettier-ignore  -->
 			<CodeBlock>
@@ -563,10 +576,11 @@ JSON_TABLE(
 				Sample Scan
 			</h4>
 			<p>
-				Although the scan method was first introduced in the <a
+				The scan method was first introduced in the <a
 					class="a"
 					href="https://en.wikipedia.org/wiki/SQL:2003">SQL:2003 standard</a
-				>, Postgres incorporated it in
+				>
+				and Postgres incorporated it in
 				<a class="a" href="https://www.postgresql.org/docs/9.5/release-9-5.html">V09.5 in 2016</a>.
 				It returns a random sample of rows from a table rather than the entire set. EnterpriseDB's
 				<a class="a" href="https://www.enterprisedb.com/blog/tablesample-postgresql-95">blog</a>
@@ -587,8 +601,21 @@ SELECT * FROM test_table TABLESAMPLE SYSTEM (10);
 					class="a"
 					href="https://github.com/postgres/postgres/blob/901ed9b352b41f034e17bc540725082a488fce31/src/backend/executor/nodeNamedtuplestorescan.c"
 					>source code</a
-				> if you're really determined to understand it.
+				>
+				if you're really determined to understand it.
 			</p>
+			<Quote>
+				I kind of like the above meandering, so I'm going to leave it in. However, my desire for
+				thoroughness got the best of me and I decided to find out what the node actually is. You can
+				read about it in this <a
+					href="https://celebrated-banoffee-1d6ed3.netlify.app/#NAMED-TUPLESTORE-SCAN-OVERVIEW"
+					class="a">pre-rendered version of the Postgres docs</a
+				>. I'm hoping to get the description into the official Postgres Docs with this
+				<a
+					href="https://www.postgresql.org/message-id/flat/20260719002640.860035-1-briantgbtheonly%40gmail.com#d654dddf8d1aceb54b6dc80f80344cb4"
+					class="a">PR</a
+				>.
+			</Quote>
 		</section>
 	</div>
 	<!-- JOINS: ---------------------- -->
@@ -622,7 +649,7 @@ SELECT * FROM test_table TABLESAMPLE SYSTEM (10);
 						>LIMIT</CodeHighlight
 					> clause suggests to the planner that the operation may be able to escape early, the planner
 					may still prefer a nested loop. This is because the total number of loops may be reduced, to
-					the point where more advanced join methods may not be worth the setup overhead.
+					the point where more advanced join methods are not worth the setup overhead.
 				</p>
 				<h4
 					class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
@@ -977,12 +1004,34 @@ SELECT COUNT(id) FROM some_table;
 					MixedAggregate
 				</h4>
 				<p>placeholder</p>
+				<Quote>
+					So, I eventually got around to researching this, but it is in the <a
+						href="https://www.postgresql.org/message-id/flat/20260719002640.860035-1-briantgbtheonly%40gmail.com#d654dddf8d1aceb54b6dc80f80344cb4"
+						class="a">PR</a
+					>
+					for Postgres's docs. Here's a
+					<a
+						href="https://celebrated-banoffee-1d6ed3.netlify.app/#MIXED-AGGREGATE-OVERVIEW"
+						class="a">pre-rendered version</a
+					>.
+				</Quote>
 				<h4
 					class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
 				>
 					WindowAgg
 				</h4>
 				<p>placeholder</p>
+				<Quote>
+					So, I eventually got around to researching this, but it is in the <a
+						href="https://www.postgresql.org/message-id/flat/20260719002640.860035-1-briantgbtheonly%40gmail.com#d654dddf8d1aceb54b6dc80f80344cb4"
+						class="a">PR</a
+					>
+					for Postgres's docs. Here's a
+					<a
+						href="https://celebrated-banoffee-1d6ed3.netlify.app/#WINDOW-AGGREGATE-OVERVIEW"
+						class="a">pre-rendered version</a
+					>.
+				</Quote>
 				<h4
 					class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
 				>
@@ -1056,7 +1105,7 @@ GROUP BY id, message
 						class="a"
 						href="https://en.wikipedia.org/wiki/Quicksort">quicksort algorithm</a
 					>
-					or, if <CodeHighlight>LIMIT</CodeHighlight> clause is present, the
+					or, if a <CodeHighlight>LIMIT</CodeHighlight> clause is present, the
 					<a class="a" href="https://en.wikipedia.org/wiki/Heapsort">top-N heapsort algorithm</a> to
 					order values. For large enough entries, Postgres may opt to perform an external
 					<a class="a" href="https://en.wikipedia.org/wiki/Merge_sort">merge sort</a> on disk.
@@ -1169,9 +1218,9 @@ ORDER BY id DESC, message DESC
 				</h4>
 				<p>
 					Used to optimize <CodeHighlight>Nested Loop</CodeHighlight> joins. When one side of the join
-					contains a large number of duplicate values, PostgreSQL can compare against a single representative
-					value instead of repeatedly evaluating every duplicate row. The duplicates are cached in session
-					memory for faster reference.
+					contains a large number of duplicate values, PostgreSQL can cache the matching rows for it in
+					session memory instead of repeatedly evaluating every duplicate row. That way, when another
+					duplicate emerges, it won't have to perform the comparisons twice.
 				</p>
 				<h4
 					class="mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"

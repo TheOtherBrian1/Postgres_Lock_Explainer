@@ -24,15 +24,15 @@
 		{
 			path: '/plans/configs',
 			name: 'Settings and Statistics'
-		},
-		{
-			path: '/plans/troubleshooting',
-			name: 'Troubleshooting and Management'
-		},
-		{
-			path: '/plans/plan_interpreter',
-			name: 'Plan Interpreter'
 		}
+		// {
+		// 	path: '/plans/troubleshooting',
+		// 	name: 'Troubleshooting and Management'
+		// },
+		// {
+		// 	path: '/plans/plan_interpreter',
+		// 	name: 'Plan Interpreter'
+		// }
 		// {
 		// 	path: '/plans/monitoring',
 		// 	name: 'Monitoring'
