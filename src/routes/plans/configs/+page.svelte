@@ -621,12 +621,12 @@ SET DATABSE some_database enable_SOME_ALGO TO FALSE;
 
 	<section class="explainer_section">
 		<SectionHeader>Extended Statistics</SectionHeader>
-		<Quote>
+		<!-- <Quote>
 			A tired Brian proceeded to cry as he realized how foolish he was to take on this project. The
 			planner has never been successfully documented and now he must go through the soul crushing
 			process of doing the impractical. This message was written by said tired Brian as he narrated
 			himself in despair.
-		</Quote>
+		</Quote> -->
 		<div
 			class="mt-6 mb-10 rounded-2xl border border-stone-100 bg-white p-6 font-sans text-stone-600 shadow-sm md:p-8"
 		>
