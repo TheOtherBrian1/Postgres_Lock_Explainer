@@ -63,14 +63,9 @@
 				outlines <em>most</em> node plans and is the most thorough resource for outlining all subfields.
 			{/snippet}
 			<NumberedList items={[item100, item101, item102]} />
+			<p>These were foundational during my investigations.</p>
 			<p>
-				These were foundational during my investigations. However, they all had gaps. Nothing major,
-				and certainly nothing worth desparging over. Without them, this project would not have been
-				feasible.
-			</p>
-			<p>
-				When I started this process, I lacked intuition for a lot of the operations. I'd like to
-				give praise to TigerData, as their <a
+				I'd also like to give praise to TigerData, as their <a
 					href="https://www.tigerdata.com/blog/how-postgresql-aggregation-works-and-how-it-inspired-our-hyperfunctions-design"
 					class="a">review of aggregations</a
 				> really helped me understand the internals.
@@ -83,12 +78,12 @@
 				and
 				<a class="a" href="https://www.enterprisedb.com/blog/tablesample-postgresql-95"
 					>EnterpriseDB's</a
-				> blogs also were handy a few times.
+				> blogs also were handy at times.
 			</p>
 			<p>
 				In some cases, there really were no resources. At the time of writing, the node types aren't
 				actually in the Postgres docs. A lot of this was just trial and error, experimenting with
-				SQL, and reading the source code. Still, I cannot dismiss how foundational the above
+				SQL, and reading the source code. Still, I cannot understate how foundational the above
 				resources were for me when compiling this list.
 			</p>
 			<p>
