@@ -1,4 +1,9 @@
-/** @type {import('@sveltejs/adapter-vercel').Config} */
-export const config = {
-	split: true
+// svelte.config.js
+export default {
+	kit: {
+		adapter: adapter({
+			edge: false,
+			split: true
+		})
+	}
 };
