@@ -1,28 +1,28 @@
 <script lang="ts">
 	// import { snippet } from 'svelte';
 
-	let { error, understanding, fixes } = $props();
-	
+	let { Summary, Advanced_Explanation } = $props();
+
 	// State for the active tab (defaults to 'error')
-	let activeTab = $state('error');
+	let activeTab = $state('Summary');
 
 	const tabs = [
-		{ id: 'error', label: 'The Error' },
-		{ id: 'understanding', label: 'Understanding' },
-		{ id: 'fixes', label: 'Causes & Fixes' }
+		{ id: 'Summary', label: 'Summary' },
+		{ id: 'Advanced_Explanation', label: 'Advanced_Explanation' }
+		// { id: 'fixes', label: 'Causes & Fixes' }
 	];
 </script>
 
-<div class="border border-stone-200 rounded-lg overflow-hidden bg-white mb-8">
+<div class="mb-8 overflow-hidden rounded-lg border border-stone-200 bg-white">
 	<!-- Tab Headers -->
 	<div class="flex border-b border-stone-200 bg-stone-50">
 		{#each tabs as tab}
 			<button
-				onclick={() => activeTab = tab.id}
-				class="flex-1 px-4 py-3 text-sm font-medium transition-colors duration-200 
-                {activeTab === tab.id 
-                    ? 'bg-white text-[#ff3e00] border-b-2 border-[#ff3e00]' 
-                    : 'text-stone-500 hover:text-stone-800 hover:bg-stone-100 cursor-pointer'}"
+				onclick={() => (activeTab = tab.id)}
+				class="flex-1 px-4 py-3 text-sm font-medium transition-colors duration-200
+                {activeTab === tab.id
+					? 'border-b-2 border-[#ff3e00] bg-white text-[#ff3e00]'
+					: 'cursor-pointer text-stone-500 hover:bg-stone-100 hover:text-stone-800'}"
 			>
 				{tab.label}
 			</button>
@@ -30,19 +30,20 @@
 	</div>
 
 	<!-- Tab Content -->
-	<div class="p-6 md:p-8 bg-white min-h-[300px]">
-		{#if activeTab === 'error'}
+	<div class="min-h-[300px] bg-white p-6 md:p-8">
+		{#if activeTab === 'Summary'}
 			<div class="animate-in fade-in duration-300">
-				{@render error()}
+				{@render Summary()}
 			</div>
-		{:else if activeTab === 'understanding'}
+		{:else if activeTab === 'Advanced_Explanation'}
 			<div class="animate-in fade-in duration-300">
-				{@render understanding()}
+				{@render Advanced_Explanation()}
 			</div>
-		{:else if activeTab === 'fixes'}
+			<!-- {:else if activeTab === 'fixes'}
 			<div class="animate-in fade-in duration-300">
 				{@render fixes()}
 			</div>
+		-->
 		{/if}
 	</div>
 </div>

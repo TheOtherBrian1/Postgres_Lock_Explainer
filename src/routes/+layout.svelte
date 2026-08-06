@@ -24,6 +24,10 @@
 		{
 			path: '/plans/configs',
 			name: 'Settings and Statistics'
+		},
+		{
+			path: '/plans/fields',
+			name: 'Node fields'
 		}
 		// {
 		// 	path: '/plans/troubleshooting',

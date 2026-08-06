@@ -126,6 +126,7 @@
 				tables, they are slow and can have a high IO overhead because of the amount of data that
 				needs to be reviewed.
 			</p>
+
 			<h4
 				class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
 			>
