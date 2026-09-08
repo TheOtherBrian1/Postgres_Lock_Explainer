@@ -237,7 +237,7 @@
 		}
 	};
 
-	const analyzeModifers = {
+	const analyzeModifers = {/*
 		'Actual Startup Time': {
 			sourceFunction: 'ExplainNode',
 			appliesTo: ['All Plan Nodes'],
@@ -825,6 +825,7 @@
 			example: 37.803,
 			requiredExplainMods: ['ANALYZE']
 		}
+*/
 	};
 
 	/*
@@ -2188,7 +2189,7 @@ ROLLBACK;
 	<h4
 		class="mt-8 mb-4 rounded-xs border-l-2 bg-gray-50 p-2 text-lg font-bold text-stone-900 shadow-xs"
 	>
-		ANALYZE in depth
+		ANALYZE in depth (WIP)
 	</h4>
 	<ul class="mb-10 ml-4 list-disc space-y-2">
 		{#each Object.entries(analyzeModifers) as [key, val]}
